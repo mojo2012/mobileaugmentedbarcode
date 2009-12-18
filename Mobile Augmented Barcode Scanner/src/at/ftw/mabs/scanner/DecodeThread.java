@@ -29,7 +29,7 @@ import android.util.Log;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.camera.colormodels.BaseLuminanceSource;
-import at.ftw.mabs.ui.ShowAugmentedView;
+import at.ftw.mabs.ui.CaptureActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -49,13 +49,13 @@ final class DecodeThread extends Thread {
 	private static final String		TAG				= "DecodeThread";
 
 	private Handler					handler;
-	private final ShowAugmentedView	activity;
+	private final CaptureActivity	activity;
 	private final MultiFormatReader	multiFormatReader;
 
 	public static final String		ONE_D_MODE		= "ONE_D_MODE";
 	public static final String		PRODUCT_MODE	= "PRODUCT_MODE";
 
-	DecodeThread(ShowAugmentedView activity, String mode) {
+	DecodeThread(CaptureActivity activity, String mode) {
 		this.activity = activity;
 		multiFormatReader = new MultiFormatReader();
 

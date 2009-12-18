@@ -25,7 +25,7 @@ import android.os.Handler;
 import android.os.Message;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
-import at.ftw.mabs.ui.ShowAugmentedView;
+import at.ftw.mabs.ui.CaptureActivity;
 
 import com.google.zxing.Result;
 
@@ -36,7 +36,7 @@ import com.google.zxing.Result;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class CaptureActivityHandler extends Handler {
-	private final ShowAugmentedView	activity;
+	private final CaptureActivity	activity;
 	private final DecodeThread		decodeThread;
 	private State					state;
 
@@ -46,10 +46,10 @@ public final class CaptureActivityHandler extends Handler {
 		DONE
 	}
 
-	public CaptureActivityHandler(ShowAugmentedView activity, String decodeMode,
+	public CaptureActivityHandler(CaptureActivity captureActivity, String decodeMode,
 			boolean beginScanning) {
-		this.activity = activity;
-		decodeThread = new DecodeThread(activity, decodeMode);
+		this.activity = captureActivity;
+		decodeThread = new DecodeThread(captureActivity, decodeMode);
 		decodeThread.start();
 		state = State.SUCCESS;
 

@@ -61,7 +61,8 @@ public class ShowAugmentedView extends Activity {
 		}
 		if (handler == null) {
 			boolean beginScanning = true;
-			handler = new CaptureActivityHandler(this, "ONE_D_MODE", beginScanning);
+			// handler = new CaptureActivityHandler(this, "ONE_D_MODE",
+			// beginScanning);
 		}
 	}
 

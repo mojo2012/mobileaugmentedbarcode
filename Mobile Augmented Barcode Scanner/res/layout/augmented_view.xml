@@ -5,7 +5,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<at.ftw.mabs.camera.SurfaceView 
+	<SurfaceView 
 		android:id="@+id/augmentedView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" />
