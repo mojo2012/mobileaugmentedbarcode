@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package at.ftw.mabs.camera;
+package at.ftw.mabs.camera.colormodels;
 
 import com.google.zxing.LuminanceSource;
 
