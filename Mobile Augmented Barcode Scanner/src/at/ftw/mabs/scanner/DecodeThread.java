@@ -27,8 +27,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import at.ftw.mabs.R;
-import at.ftw.mabs.camera.BaseLuminanceSource;
 import at.ftw.mabs.camera.CameraManager;
+import at.ftw.mabs.camera.colormodels.BaseLuminanceSource;
 import at.ftw.mabs.ui.ShowAugmentedView;
 
 import com.google.zxing.BarcodeFormat;
