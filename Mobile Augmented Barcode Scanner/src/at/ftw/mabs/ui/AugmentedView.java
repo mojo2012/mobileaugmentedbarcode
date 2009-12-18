@@ -1,4 +1,4 @@
-package at.ftw.mabs.camera;
+package at.ftw.mabs.ui;
 
 import java.io.IOException;
 
