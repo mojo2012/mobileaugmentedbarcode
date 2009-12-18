@@ -1,15 +1,23 @@
 package at.ftw.mabs.ui;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.SurfaceHolder;
 import android.view.Window;
+import android.view.WindowManager;
+import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.scanner.CaptureActivityHandler;
 
 import com.google.zxing.Result;
 
 public class ShowAugmentedView extends Activity {
+	static final String				TAG	= "MABS/ShowAugmentedView";
+
 	private AugmentedView			previewView;
 
 	private CaptureActivityHandler	handler;
@@ -19,14 +27,42 @@ public class ShowAugmentedView extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Hide the window title.
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		Window window = getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+		CameraManager.init(getApplication());
+		handler = null;
 
 		// Create our Preview view and set it as the content of our activity.
 		previewView = new AugmentedView(this);
 		setContentView(previewView);
 
 		// setContentView(R.layout.augmented_view);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (handler != null) {
+			handler.quitSynchronously();
+			handler = null;
+		}
+
+		CameraManager.get().closeDriver();
+	}
+
+	private void initCamera(SurfaceHolder surfaceHolder) {
+		try {
+			CameraManager.get().openDriver(surfaceHolder);
+		} catch (IOException ioe) {
+			Log.w(TAG, ioe);
+			return;
+		}
+		if (handler == null) {
+			boolean beginScanning = true;
+			handler = new CaptureActivityHandler(this, "ONE_D_MODE", beginScanning);
+		}
 	}
 
 	/**
