@@ -259,6 +259,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	public void handleDecode(Result rawResult, Bitmap barcode) {
 		lastResult = rawResult;
 
+		Log.v(TAG, "Barcode found.");
+
 		if (barcode == null) {
 			// This is from history -- no saved barcode
 			handleDecodeInternally(rawResult, null);
