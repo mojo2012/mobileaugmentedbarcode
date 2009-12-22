@@ -43,20 +43,19 @@ import com.google.zxing.oned.EAN13Reader;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 final class DecodeThread extends Thread {
-	private static final String		TAG				= "MABS/DecodeThread";
+	private static final String				TAG				= "MABS/DecodeThread";
 
-	public static final String		BARCODE_BITMAP	= "barcode_bitmap";
+	public static final String				BARCODE_BITMAP	= "barcode_bitmap";
 
-	private Handler					handler;
+	private Handler							handler;
 	private final AugmentedRealityActivity	activity;
-	private final EAN13Reader		reader;
-
-	public static final String		ONE_D_MODE		= "ONE_D_MODE";
-	public static final String		PRODUCT_MODE	= "PRODUCT_MODE";
+	private final EAN13Reader				reader;
 
 	DecodeThread(AugmentedRealityActivity activity) {
 		this.activity = activity;
 		reader = new EAN13Reader();
+
+		setDecode1DMode();
 	}
 
 	Handler getHandler() {

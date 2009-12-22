@@ -16,40 +16,33 @@
 
 package com.google.zxing;
 
-import com.google.zxing.common.ByteMatrix;
-import com.google.zxing.oned.EAN13Writer;
-import com.google.zxing.oned.EAN8Writer;
-import com.google.zxing.qrcode.QRCodeWriter;
-
 import java.util.Hashtable;
 
+import com.google.zxing.common.ByteMatrix;
+import com.google.zxing.oned.EAN13Writer;
+
 /**
- * This is a factory class which finds the appropriate Writer subclass for the BarcodeFormat
- * requested and encodes the barcode with the supplied contents.
- *
+ * This is a factory class which finds the appropriate Writer subclass for the
+ * BarcodeFormat requested and encodes the barcode with the supplied contents.
+ * 
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class MultiFormatWriter implements Writer {
 
-  public ByteMatrix encode(String contents, BarcodeFormat format, int width,
-      int height) throws WriterException {
+	public ByteMatrix encode(String contents, BarcodeFormat format, int width,
+			int height) throws WriterException {
 
-    return encode(contents, format, width, height, null);
-  }
+		return encode(contents, format, width, height, null);
+	}
 
-  public ByteMatrix encode(String contents, BarcodeFormat format, int width, int height,
-      Hashtable hints) throws WriterException {
+	public ByteMatrix encode(String contents, BarcodeFormat format, int width, int height,
+			Hashtable hints) throws WriterException {
 
-    if (format == BarcodeFormat.EAN_8) {
-      return new EAN8Writer().encode(contents, format, width, height, hints);
-    } else if (format == BarcodeFormat.EAN_13) {
-      return new EAN13Writer().encode(contents, format, width, height, hints);
-    } else if (format == BarcodeFormat.QR_CODE) {
-      return new QRCodeWriter().encode(contents, format, width, height, hints);
-    }
-    else {
-      throw new IllegalArgumentException("No encoder available for format " + format);
-    }
-  }
+		if (format == BarcodeFormat.EAN_13) {
+			return new EAN13Writer().encode(contents, format, width, height, hints);
+		} else {
+			throw new IllegalArgumentException("No encoder available for format " + format);
+		}
+	}
 
 }

@@ -54,12 +54,25 @@ public class AugmentedView extends View {
 
 			if (points.length == 2) {
 				paint.setStrokeWidth(4.0f);
+				paint.setColor(resultColor);
 
-				canvas.drawLine(points[0].getX(), points[0].getY(), points[1].getX(),
+				canvas.drawLine(points[0].getX(), points[0].getY(),
+						points[1].getX(),
+						points[0].getY(), paint);
+
+				canvas.drawLine(points[1].getX(), points[0].getY(),
+						points[1].getX(),
+						points[1].getY(), paint);
+
+				canvas.drawLine(points[0].getX(), points[0].getY(),
+						points[0].getX(),
+						points[1].getY(), paint);
+
+				canvas.drawLine(points[0].getX(), points[1].getY(), points[1].getX(),
 						points[1].getY(), paint);
 			}
 
-			box.set(0, 0, frame.width(), frame.height());
+			// box.set(0, 0, frame.width(), frame.height());
 
 			// int width = result.getResultPoints()..getWidth();
 			// int height = canvas.getHeight();
@@ -105,9 +118,8 @@ public class AugmentedView extends View {
 			// // Request another update at the animation interval, but only
 			// // repaint the laser line,
 			// // not the entire viewfinder mask.
-			postInvalidateDelayed(ANIMATION_DELAY, box.left, box.top, box.right, box.bottom);
+
 		}
-		// }
 	}
 
 	/**
