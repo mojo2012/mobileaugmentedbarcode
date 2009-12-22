@@ -144,6 +144,7 @@ public abstract class AbstractUPCEANReader extends AbstractOneDReader implements
 
 		float left = (startGuardRange[1] + startGuardRange[0]) / 2.0f;
 		float right = (endRange[1] + endRange[0]) / 2.0f;
+
 		return new Result(resultString,
 							null, // no natural byte representation for these
 							// barcodes

@@ -2,8 +2,10 @@ package at.ftw.mabs.ui.views;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,7 +22,7 @@ public class AugmentedView extends View {
 
 	final Paint			paint;
 	final Rect			box;
-	Result				result;
+	Point[]				resultPoints;
 	final int			maskColor;
 	final int			resultColor;
 	final int			frameColor;
@@ -49,27 +51,26 @@ public class AugmentedView extends View {
 			return;
 		}
 
-		if (result != null) {
-			ResultPoint[] points = result.getResultPoints();
-
-			if (points.length == 2) {
+		if (resultPoints != null) {
+			if (resultPoints.length == 2) {
 				paint.setStrokeWidth(4.0f);
 				paint.setColor(resultColor);
 
-				canvas.drawLine(points[0].getX(), points[0].getY(),
-						points[1].getX(),
-						points[0].getY(), paint);
+				canvas.drawLine(resultPoints[0].x, resultPoints[0].y,
+						resultPoints[1].x,
+						resultPoints[0].y, paint);
 
-				canvas.drawLine(points[1].getX(), points[0].getY(),
-						points[1].getX(),
-						points[1].getY(), paint);
+				canvas.drawLine(resultPoints[1].x, resultPoints[0].y,
+						resultPoints[1].x,
+						resultPoints[1].y, paint);
 
-				canvas.drawLine(points[0].getX(), points[0].getY(),
-						points[0].getX(),
-						points[1].getY(), paint);
+				canvas.drawLine(resultPoints[0].x, resultPoints[0].y,
+						resultPoints[0].x,
+						resultPoints[1].y, paint);
 
-				canvas.drawLine(points[0].getX(), points[1].getY(), points[1].getX(),
-						points[1].getY(), paint);
+				canvas.drawLine(resultPoints[0].x, resultPoints[1].y,
+						resultPoints[1].x,
+						resultPoints[1].y, paint);
 			}
 
 			// box.set(0, 0, frame.width(), frame.height());
@@ -130,7 +131,18 @@ public class AugmentedView extends View {
 	 *            An image of the decoded barcode.
 	 */
 	public void drawResult(Result rawResult) {
-		result = rawResult;
+		resultPoints = CameraManager.get().convertResultPoints(rawResult.getResultPoints());
+
 		invalidate();
+	}
+
+	ResultPoint[] getRectangularResultPoints(Bitmap bitmap, Point[] rawScreenPoints) {
+		ResultPoint[] points = new ResultPoint[2];
+
+		for (float x = rawScreenPoints[0].x; x <= rawScreenPoints[1].x; x += 1) {
+
+		}
+
+		return points;
 	}
 }
