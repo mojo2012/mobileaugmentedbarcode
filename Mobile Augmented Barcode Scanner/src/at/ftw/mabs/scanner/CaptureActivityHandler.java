@@ -48,10 +48,10 @@ public final class CaptureActivityHandler extends Handler {
 		DONE
 	}
 
-	public CaptureActivityHandler(CaptureActivity captureActivity, String decodeMode,
-			boolean beginScanning) {
+	public CaptureActivityHandler(CaptureActivity captureActivity, boolean beginScanning) {
 		this.activity = captureActivity;
-		decodeThread = new DecodeThread(captureActivity, decodeMode);
+
+		decodeThread = new DecodeThread(captureActivity);
 		decodeThread.start();
 		state = State.SUCCESS;
 

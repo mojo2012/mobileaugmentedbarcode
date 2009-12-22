@@ -19,12 +19,10 @@ package at.ftw.mabs.scanner;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
@@ -34,10 +32,10 @@ import at.ftw.mabs.ui.CaptureActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.GlobalHistogramBinarizer;
+import com.google.zxing.oned.EAN13Reader;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
@@ -51,35 +49,14 @@ final class DecodeThread extends Thread {
 
 	private Handler					handler;
 	private final CaptureActivity	activity;
-	private final MultiFormatReader	multiFormatReader;
+	private final EAN13Reader		reader;
 
 	public static final String		ONE_D_MODE		= "ONE_D_MODE";
 	public static final String		PRODUCT_MODE	= "PRODUCT_MODE";
 
-	DecodeThread(CaptureActivity activity, String mode) {
+	DecodeThread(CaptureActivity activity) {
 		this.activity = activity;
-		multiFormatReader = new MultiFormatReader();
-
-		// The prefs can't change while the thread is running, so pick them up
-		// once here.
-		if (mode == null || mode.length() == 0) {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-			boolean decode1D = true;
-			boolean decodeQR = false;
-			if (decode1D && decodeQR) {
-				setDecodeAllMode();
-			} else if (decode1D) {
-				setDecode1DMode();
-			}
-		} else {
-			if (mode.equals(PRODUCT_MODE)) {
-				setDecodeProductMode();
-			} else if (mode.equals(ONE_D_MODE)) {
-				setDecode1DMode();
-			} else {
-				setDecodeAllMode();
-			}
-		}
+		reader = new EAN13Reader();
 	}
 
 	Handler getHandler() {
@@ -89,6 +66,7 @@ final class DecodeThread extends Thread {
 	@Override
 	public void run() {
 		Looper.prepare();
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message message) {
@@ -105,17 +83,6 @@ final class DecodeThread extends Thread {
 		Looper.loop();
 	}
 
-	private void setDecodeProductMode() {
-		Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(3);
-		Vector<BarcodeFormat> vector = new Vector<BarcodeFormat>(4);
-		vector.addElement(BarcodeFormat.UPC_A);
-		vector.addElement(BarcodeFormat.UPC_E);
-		vector.addElement(BarcodeFormat.EAN_13);
-		vector.addElement(BarcodeFormat.EAN_8);
-		hints.put(DecodeHintType.POSSIBLE_FORMATS, vector);
-		multiFormatReader.setHints(hints);
-	}
-
 	/**
 	 * Select the 1D formats we want this client to decode by hand.
 	 */
@@ -125,31 +92,7 @@ final class DecodeThread extends Thread {
 		vector.addElement(BarcodeFormat.UPC_A);
 		vector.addElement(BarcodeFormat.UPC_E);
 		vector.addElement(BarcodeFormat.EAN_13);
-		vector.addElement(BarcodeFormat.EAN_8);
-		vector.addElement(BarcodeFormat.CODE_39);
-		vector.addElement(BarcodeFormat.CODE_128);
-		vector.addElement(BarcodeFormat.ITF);
 		hints.put(DecodeHintType.POSSIBLE_FORMATS, vector);
-		multiFormatReader.setHints(hints);
-	}
-
-	/**
-	 * Instead of calling setHints(null), which would allow new formats to sneak
-	 * in, we explicitly set which formats are available.
-	 */
-	private void setDecodeAllMode() {
-		Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(3);
-		Vector<BarcodeFormat> vector = new Vector<BarcodeFormat>(8);
-		vector.addElement(BarcodeFormat.UPC_A);
-		vector.addElement(BarcodeFormat.UPC_E);
-		vector.addElement(BarcodeFormat.EAN_13);
-		vector.addElement(BarcodeFormat.EAN_8);
-		vector.addElement(BarcodeFormat.CODE_39);
-		vector.addElement(BarcodeFormat.CODE_128);
-		vector.addElement(BarcodeFormat.ITF);
-		vector.addElement(BarcodeFormat.QR_CODE);
-		hints.put(DecodeHintType.POSSIBLE_FORMATS, vector);
-		multiFormatReader.setHints(hints);
 	}
 
 	/**
@@ -167,15 +110,18 @@ final class DecodeThread extends Thread {
 	private void decode(byte[] data, int width, int height) {
 		long start = System.currentTimeMillis();
 		boolean success;
+
 		Result rawResult = null;
 		BaseLuminanceSource source = CameraManager.get().buildLuminanceSource(data, width, height);
 		BinaryBitmap bitmap = new BinaryBitmap(new GlobalHistogramBinarizer(source));
+
 		try {
-			rawResult = multiFormatReader.decodeWithState(bitmap);
+			rawResult = reader.decode(bitmap);
 			success = true;
 		} catch (ReaderException e) {
 			success = false;
 		}
+
 		long end = System.currentTimeMillis();
 
 		if (success) {

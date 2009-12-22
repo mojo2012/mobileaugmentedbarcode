@@ -61,7 +61,7 @@
   <string name="msg_default_contents">Contents</string>
   <string name="msg_default_format">Format</string>
   <string name="msg_default_mms_subject">Hi</string>
-  <string name="msg_default_status">Place a barcode inside the viewfinder rectangle to scan it.
+  <string name="msg_default_status">Place a ISBN barcode inside the rectangle to scan it.
   </string>
   <string name="msg_default_type">Type</string>
   <string name="msg_encode_barcode_failed">Could not generate the requested barcode.</string>

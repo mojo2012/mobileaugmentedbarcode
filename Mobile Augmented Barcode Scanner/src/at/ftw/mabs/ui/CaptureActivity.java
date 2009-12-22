@@ -27,7 +27,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -43,7 +42,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
@@ -72,10 +70,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	private static final float	BEEP_VOLUME					= 0.10f;
 	private static final long	VIBRATE_DURATION			= 200L;
 
-	private static final String	PACKAGE_NAME				= "com.google.zxing.client.android";
-	private static final String	PRODUCT_SEARCH_URL_PREFIX	= "http://www.google";
+	private static final String	PRODUCT_SEARCH_URL_PREFIX	= "http://www.amazon.de";
 	private static final String	PRODUCT_SEARCH_URL_SUFFIX	= "/m/products/scan";
-	private static final String	ZXING_URL					= "http://zxing.appspot.com/scan";
 
 	private enum Source {
 		NATIVE_APP_INTENT,
@@ -139,6 +135,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
+
 		if (hasSurface) {
 			// The activity was paused but not stopped, so the surface still
 			// exists. Therefore
@@ -151,45 +148,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
 
-		Intent intent = getIntent();
-		String action = intent == null ? null : intent.getAction();
-		String dataString = intent == null ? null : intent.getDataString();
-		if (intent != null && action != null) {
-			if (action.equals("com.google.zxing.client.android.SCAN")) {
-				// Scan the formats the intent requested, and return the result
-				// to the calling activity.
-				source = Source.NATIVE_APP_INTENT;
-				decodeMode = intent.getStringExtra("SCAN_MODE");
-				resetStatusView();
-			} else if (dataString != null && dataString.contains(PRODUCT_SEARCH_URL_PREFIX) &&
-					dataString.contains(PRODUCT_SEARCH_URL_SUFFIX)) {
-				// Scan only products and send the result to mobile Product
-				// Search.
-				source = Source.PRODUCT_SEARCH_LINK;
-				sourceUrl = dataString;
-				decodeMode = "ONE_D_MODE";
-				resetStatusView();
-			} else if (dataString != null && dataString.equals(ZXING_URL)) {
-				// Scan all formats and handle the results ourselves.
-				// TODO: In the future we could allow the hyperlink to include a
-				// URL to send the results to.
-				source = Source.ZXING_LINK;
-				sourceUrl = dataString;
-				decodeMode = null;
-				resetStatusView();
-			} else {
-				// Scan all formats and handle the results ourselves (launched
-				// from Home).
-				source = Source.NONE;
-				decodeMode = null;
-				resetStatusView();
-			}
-		} else {
-			source = Source.NONE;
-			decodeMode = null;
-			if (lastResult == null) {
-				resetStatusView();
-			}
+		source = Source.NONE;
+		decodeMode = null;
+
+		if (lastResult == null) {
+			resetStatusView();
 		}
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -259,23 +222,16 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	public void handleDecode(Result rawResult, Bitmap barcode) {
 		lastResult = rawResult;
 
-		Log.v(TAG, "Barcode found.");
+		Log.v(TAG, "Barcode found: " + rawResult.getText());
 
-		if (barcode == null) {
-			// This is from history -- no saved barcode
-			handleDecodeInternally(rawResult, null);
-		} else {
+		if (barcode != null) {
 			drawResultPoints(barcode, rawResult);
-			switch (source) {
-				case NATIVE_APP_INTENT:
-				case PRODUCT_SEARCH_LINK:
-					handleDecodeExternally(rawResult, barcode);
-					break;
-				case ZXING_LINK:
-				case NONE:
-					handleDecodeInternally(rawResult, barcode);
-					break;
-			}
+
+			TextView formatTextView = (TextView) findViewById(R.id.status_text_view);
+			formatTextView.setVisibility(View.VISIBLE);
+			formatTextView.setText(rawResult.getText());
+
+			handler.sendEmptyMessage(R.id.restart_preview);
 		}
 	}
 
@@ -290,6 +246,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	 */
 	private void drawResultPoints(Bitmap barcode, Result rawResult) {
 		ResultPoint[] points = rawResult.getResultPoints();
+
 		if (points != null && points.length > 0) {
 			Canvas canvas = new Canvas(barcode);
 			Paint paint = new Paint();
@@ -300,6 +257,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			canvas.drawRect(border, paint);
 
 			paint.setColor(getResources().getColor(R.color.result_points));
+
 			if (points.length == 2) {
 				paint.setStrokeWidth(4.0f);
 				canvas.drawLine(points[0].getX(), points[0].getY(), points[1].getX(),
@@ -313,111 +271,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		}
 	}
 
-	// Put up our own UI for how to handle the decoded contents.
-	private void handleDecodeInternally(Result rawResult, Bitmap barcode) {
-		viewfinderView.setVisibility(View.GONE);
-
-		if (barcode == null) {
-			barcode = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon)).getBitmap();
-		}
-		ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode_image_view);
-		barcodeImageView.setVisibility(View.VISIBLE);
-		barcodeImageView.setMaxWidth(MAX_RESULT_IMAGE_SIZE);
-		barcodeImageView.setMaxHeight(MAX_RESULT_IMAGE_SIZE);
-		barcodeImageView.setImageBitmap(barcode);
-
-		TextView formatTextView = (TextView) findViewById(R.id.format_text_view);
-		formatTextView.setVisibility(View.VISIBLE);
-		formatTextView.setText(getString(R.string.msg_default_format) + ": " +
-				rawResult.getBarcodeFormat().toString());
-
-		// ResultHandler resultHandler =
-		// ResultHandlerFactory.makeResultHandler(this, rawResult);
-		// TextView typeTextView = (TextView) findViewById(R.id.type_text_view);
-		// typeTextView.setText(getString(R.string.msg_default_type) + ": " +
-		// resultHandler.getType().toString());
-		//
-		// TextView contentsTextView = (TextView)
-		// findViewById(R.id.contents_text_view);
-		// CharSequence title = getString(resultHandler.getDisplayTitle());
-		// SpannableStringBuilder styled = new SpannableStringBuilder(title +
-		// "\n\n");
-		// styled.setSpan(new UnderlineSpan(), 0, title.length(), 0);
-		// CharSequence displayContents = resultHandler.getDisplayContents();
-		// styled.append(displayContents);
-		// contentsTextView.setText(styled);
-		//
-		// int buttonCount = resultHandler.getButtonCount();
-		// ViewGroup buttonView = (ViewGroup)
-		// findViewById(R.id.result_button_view);
-		// buttonView.requestFocus();
-		// for (int x = 0; x < ResultHandler.MAX_BUTTON_COUNT; x++) {
-		// TextView button = (TextView) buttonView.getChildAt(x);
-		// if (x < buttonCount) {
-		// button.setVisibility(View.VISIBLE);
-		// button.setText(resultHandler.getButtonText(x));
-		// button.setOnClickListener(new ResultButtonListener(resultHandler,
-		// x));
-		// } else {
-		// button.setVisibility(View.GONE);
-		// }
-		// }
-
-		// if (copyToClipboard) {
-		// ClipboardManager clipboard = (ClipboardManager)
-		// getSystemService(CLIPBOARD_SERVICE);
-		// clipboard.setText(displayContents);
-		// }
-	}
-
-	// Briefly show the contents of the barcode, then handle the result outside
-	// Barcode Scanner.
-	private void handleDecodeExternally(Result rawResult, Bitmap barcode) {
-		viewfinderView.drawResultBitmap(barcode);
-
-		// Since this message will only be shown for a second, just tell the
-		// user what kind of
-		// barcode was found (e.g. contact info) rather than the full contents,
-		// which they won't
-		// have time to read.
-		// ResultHandler resultHandler =
-		// ResultHandlerFactory.makeResultHandler(this, rawResult);
-		// TextView textView = (TextView) findViewById(R.id.status_text_view);
-		// textView.setGravity(Gravity.CENTER);
-		// textView.setTextSize(18.0f);
-		// textView.setText(getString(resultHandler.getDisplayTitle()));
-		//
-		// statusView.setBackgroundColor(getResources().getColor(R.color.transparent));
-		//
-		// if (copyToClipboard) {
-		// ClipboardManager clipboard = (ClipboardManager)
-		// getSystemService(CLIPBOARD_SERVICE);
-		// clipboard.setText(resultHandler.getDisplayContents());
-		// }
-		//
-		// if (source == Source.NATIVE_APP_INTENT) {
-		// // Hand back whatever action they requested - this can be changed to
-		// // Intents.Scan.ACTION when
-		// // the deprecated intent is retired.
-		// Intent intent = new Intent(getIntent().getAction());
-		// intent.putExtra(Intents.Scan.RESULT, rawResult.toString());
-		// intent.putExtra(Intents.Scan.RESULT_FORMAT,
-		// rawResult.getBarcodeFormat().toString());
-		// Message message = Message.obtain(handler, R.id.return_scan_result);
-		// message.obj = intent;
-		// handler.sendMessageDelayed(message, INTENT_RESULT_DURATION);
-		// } else if (source == Source.PRODUCT_SEARCH_LINK) {
-		// // Reformulate the URL which triggered us into a query, so that the
-		// // request goes to the same
-		// // TLD as the scan URL.
-		// Message message = Message.obtain(handler, R.id.launch_product_query);
-		// int end = sourceUrl.lastIndexOf("/scan");
-		// message.obj = sourceUrl.substring(0, end) + "?q=" +
-		// resultHandler.getDisplayContents().toString() + "&source=zxing";
-		// handler.sendMessageDelayed(message, INTENT_RESULT_DURATION);
-		// }
-	}
-
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		try {
 			CameraManager.get().openDriver(surfaceHolder);
@@ -427,7 +280,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		}
 		if (handler == null) {
 			boolean beginScanning = lastResult == null;
-			handler = new CaptureActivityHandler(this, "ONE_D_MODE", beginScanning);
+			handler = new CaptureActivityHandler(this, beginScanning);
 		}
 	}
 
