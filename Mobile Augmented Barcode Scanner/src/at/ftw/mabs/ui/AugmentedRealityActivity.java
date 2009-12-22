@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.SurfaceHolder;
@@ -43,7 +42,7 @@ import com.google.zxing.ResultPoint;
  * @author meister.fuchs@gmail.com (Matthias Fuchs)
  */
 public final class AugmentedRealityActivity extends Activity implements SurfaceHolder.Callback {
-	static final String	TAG							= "MABS/CaptureActivity";
+	static final String	TAG							= "MABS/AugmentedRealityActivity";
 
 	static final int	SHARE_ID					= Menu.FIRST;
 	static final int	HISTORY_ID					= Menu.FIRST + 1;
@@ -72,6 +71,9 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	AugmentedView							augmentedView;
 	MediaPlayer								mediaPlayer;
 	Result									lastResult;
+
+	TextView								statusTextView;
+
 	boolean									hasSurface;
 	boolean									playBeep;
 	boolean									vibrate;
@@ -112,6 +114,10 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		CameraManager.init(getApplication());
 
 		augmentedView = (AugmentedView) findViewById(R.id.augmented_view);
+		augmentedView.setActivity(this);
+
+		statusTextView = (TextView) findViewById(R.id.status_text_view);
+
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		handler = null;
 		lastResult = null;
@@ -164,10 +170,12 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 			if (source == Source.NATIVE_APP_INTENT) {
 				setResult(RESULT_CANCELED);
 				finish();
+
 				return true;
 			} else if ((source == Source.NONE || source == Source.ZXING_LINK) && lastResult != null) {
 				resetStatusView();
 				handler.sendEmptyMessage(R.id.restart_preview);
+
 				return true;
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
@@ -213,15 +221,16 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		Log.v(TAG, "Barcode found: " + rawResult.getText());
 
-		if (barcode != null) {
-			// drawResultPoints(barcode, rawResult);
-			augmentedView.drawResult(rawResult);
+		if (rawResult != null) {
+			if (rawResult.getResultPoints().length == 2) {
+				// drawResultPoints(barcode, rawResult);
+				augmentedView.drawResult(rawResult.getResultPoints());
 
-			TextView formatTextView = (TextView) findViewById(R.id.status_text_view);
-			formatTextView.setVisibility(View.VISIBLE);
-			formatTextView.setText(rawResult.getText());
+				statusTextView.setVisibility(View.VISIBLE);
+				statusTextView.setText(rawResult.getText());
 
-			// handler.sendEmptyMessage(R.id.restart_preview);
+				handler.sendEmptyMessage(R.id.restart_preview);
+			}
 		}
 	}
 
@@ -274,13 +283,10 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		}
 	}
 
-	private void resetStatusView() {
+	public void resetStatusView() {
 		viewfinderView.setVisibility(View.VISIBLE);
 
-		TextView textView = (TextView) findViewById(R.id.status_text_view);
-		textView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-		textView.setTextSize(14.0f);
-		textView.setText(R.string.msg_default_status);
+		statusTextView.setText(R.string.msg_default_status);
 		lastResult = null;
 	}
 
