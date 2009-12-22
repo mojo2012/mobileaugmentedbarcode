@@ -21,7 +21,7 @@ import at.ftw.mabs.camera.colormodels.PlanarYUVLuminanceSource;
 import com.google.zxing.ResultPoint;
 
 public class CameraManager {
-	private static final String				TAG					= "CameraManager";
+	private static final String				TAG					= "MABS/CameraManager";
 	private static final int				MIN_FRAME_WIDTH		= 240;
 	private static final int				MIN_FRAME_HEIGHT	= 240;
 	private static final int				MAX_FRAME_WIDTH		= 480;

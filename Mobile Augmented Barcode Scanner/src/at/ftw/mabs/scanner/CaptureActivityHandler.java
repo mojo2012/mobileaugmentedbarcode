@@ -36,6 +36,8 @@ import com.google.zxing.Result;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class CaptureActivityHandler extends Handler {
+	private static final String		TAG	= "MABS/CaptureActivityHandler";
+
 	private final CaptureActivity	activity;
 	private final DecodeThread		decodeThread;
 	private State					state;

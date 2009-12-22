@@ -35,6 +35,7 @@ import at.ftw.mabs.camera.CameraManager;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class ViewfinderView extends View {
+	private static final String	TAG				= "MABS/ViewfinderView";
 	private static final int[]	SCANNER_ALPHA	= { 0, 64, 128, 192, 255, 192, 128, 64 };
 	private static final long	ANIMATION_DELAY	= 100L;
 

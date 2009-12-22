@@ -45,8 +45,9 @@ import com.google.zxing.common.GlobalHistogramBinarizer;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 final class DecodeThread extends Thread {
+	private static final String		TAG				= "MABS/DecodeThread";
+
 	public static final String		BARCODE_BITMAP	= "barcode_bitmap";
-	private static final String		TAG				= "DecodeThread";
 
 	private Handler					handler;
 	private final CaptureActivity	activity;

@@ -8,8 +8,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class AugmentedView extends SurfaceView implements SurfaceHolder.Callback {
-	SurfaceHolder	mHolder;
-	Camera			mCamera;
+	private static final String	TAG	= "MABS/AugmentedView";
+	SurfaceHolder				mHolder;
+	Camera						mCamera;
 
 	public AugmentedView(Context context) {
 		super(context);

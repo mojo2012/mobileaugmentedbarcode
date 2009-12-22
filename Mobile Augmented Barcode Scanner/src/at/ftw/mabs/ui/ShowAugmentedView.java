@@ -16,7 +16,7 @@ import at.ftw.mabs.scanner.CaptureActivityHandler;
 import com.google.zxing.Result;
 
 public class ShowAugmentedView extends Activity {
-	static final String				TAG	= "MABS/ShowAugmentedView";
+	public static final String		TAG	= "MABS/ShowAugmentedView";
 
 	private AugmentedView			previewView;
 

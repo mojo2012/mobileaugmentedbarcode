@@ -59,7 +59,7 @@ import com.google.zxing.ResultPoint;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
-	private static final String	TAG							= "CaptureActivity";
+	private static final String	TAG							= "MABS/CaptureActivity";
 
 	private static final int	SHARE_ID					= Menu.FIRST;
 	private static final int	HISTORY_ID					= Menu.FIRST + 1;
