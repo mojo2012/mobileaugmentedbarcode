@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2008 ZXing authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package at.ftw.mabs.ui;
 
 import java.io.IOException;
@@ -46,6 +30,7 @@ import android.widget.TextView;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.scanner.CaptureActivityHandler;
+import at.ftw.mabs.ui.views.AugmentedView;
 import at.ftw.mabs.ui.views.ViewfinderView;
 
 import com.google.zxing.Result;
@@ -55,7 +40,7 @@ import com.google.zxing.ResultPoint;
  * The barcode reader activity itself. This is loosely based on the
  * CameraPreview example included in the Android SDK.
  * 
- * @author dswitkin@google.com (Daniel Switkin)
+ * @author meister.fuchs@gmail.com (Matthias Fuchs)
  */
 public final class AugmentedRealityActivity extends Activity implements SurfaceHolder.Callback {
 	static final String	TAG							= "MABS/CaptureActivity";
@@ -83,8 +68,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	CaptureActivityHandler					handler;
 
-	SurfaceView								previewView;
 	ViewfinderView							viewfinderView;
+	AugmentedView							augmentedView;
 	MediaPlayer								mediaPlayer;
 	Result									lastResult;
 	boolean									hasSurface;
@@ -126,7 +111,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		CameraManager.init(getApplication());
 
-		previewView = (SurfaceView) findViewById(R.id.preview_view);
+		augmentedView = (AugmentedView) findViewById(R.id.augmented_view);
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		handler = null;
 		lastResult = null;
@@ -229,8 +214,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		Log.v(TAG, "Barcode found: " + rawResult.getText());
 
 		if (barcode != null) {
-			drawResultPoints(barcode, rawResult);
-			viewfinderView.drawResultBitmap(barcode);
+			// drawResultPoints(barcode, rawResult);
+			augmentedView.drawResult(rawResult);
 
 			TextView formatTextView = (TextView) findViewById(R.id.status_text_view);
 			formatTextView.setVisibility(View.VISIBLE);
@@ -273,8 +258,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 					canvas.drawPoint(point.getX(), point.getY(), paint);
 				}
 			}
-
-			previewView.draw(canvas);
 		}
 	}
 

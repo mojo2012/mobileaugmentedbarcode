@@ -11,6 +11,7 @@ import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 
 import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
 
 public class AugmentedView extends View {
 	static final String	TAG				= "MABS/AugmentedView";
@@ -47,47 +48,66 @@ public class AugmentedView extends View {
 		if (frame == null) {
 			return;
 		}
-		int width = canvas.getWidth();
-		int height = canvas.getHeight();
-
-		// Draw the exterior (i.e. outside the framing rect) darkened
-		// paint.setColor(resultBitmap != null ? resultColor : maskColor);
-		box.set(0, 0, width, frame.top);
-		canvas.drawRect(box, paint);
-		box.set(0, frame.top, frame.left, frame.bottom + 1);
-		canvas.drawRect(box, paint);
-		box.set(frame.right + 1, frame.top, width, frame.bottom + 1);
-		canvas.drawRect(box, paint);
-		box.set(0, frame.bottom + 1, width, height);
-		canvas.drawRect(box, paint);
 
 		if (result != null) {
-			// Draw the opaque result bitmap over the scanning rectangle
-			paint.setAlpha(255);
-			// canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
-		} else {
-			// Draw a two pixel solid black border inside the framing rect
-			paint.setColor(frameColor);
-			box.set(frame.left, frame.top, frame.right + 1, frame.top + 2);
-			canvas.drawRect(box, paint);
-			box.set(frame.left, frame.top + 2, frame.left + 2, frame.bottom - 1);
-			canvas.drawRect(box, paint);
-			box.set(frame.right - 1, frame.top, frame.right + 1, frame.bottom - 1);
-			canvas.drawRect(box, paint);
-			box.set(frame.left, frame.bottom - 1, frame.right + 1, frame.bottom + 1);
-			canvas.drawRect(box, paint);
+			ResultPoint[] points = result.getResultPoints();
 
-			paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
-			scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
-			int middle = frame.height() / 2 + frame.top;
-			box.set(frame.left + 2, middle - 1, frame.right - 1, middle + 2);
-			canvas.drawRect(box, paint);
+			if (points.length == 2) {
+				paint.setStrokeWidth(4.0f);
 
-			// Request another update at the animation interval, but only
-			// repaint the laser line,
-			// not the entire viewfinder mask.
+				canvas.drawLine(points[0].getX(), points[0].getY(), points[1].getX(),
+						points[1].getY(), paint);
+			}
+
+			box.set(0, 0, frame.width(), frame.height());
+
+			// int width = result.getResultPoints()..getWidth();
+			// int height = canvas.getHeight();
+
+			// Draw the exterior (i.e. outside the framing rect) darkened
+			// paint.setColor(resultBitmap != null ? resultColor : maskColor);
+			// box.set(0, 0, width, frame.top);
+			// canvas.drawRect(box, paint);
+			// box.set(0, frame.top, frame.left, frame.bottom + 1);
+			// canvas.drawRect(box, paint);
+			// box.set(frame.right + 1, frame.top, width, frame.bottom + 1);
+			// canvas.drawRect(box, paint);
+			// box.set(0, frame.bottom + 1, width, height);
+			// canvas.drawRect(box, paint);
+			//
+			// if (result != null) {
+			// // Draw the opaque result bitmap over the scanning rectangle
+			// paint.setAlpha(255);
+			// // canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
+			// } else {
+			// // Draw a two pixel solid black border inside the framing rect
+			// paint.setColor(frameColor);
+			// box.set(frame.left, frame.top, frame.right + 1, frame.top + 2);
+			// canvas.drawRect(box, paint);
+			// box.set(frame.left, frame.top + 2, frame.left + 2, frame.bottom -
+			// 1);
+			// canvas.drawRect(box, paint);
+			// box.set(frame.right - 1, frame.top, frame.right + 1, frame.bottom
+			// -
+			// 1);
+			// canvas.drawRect(box, paint);
+			// box.set(frame.left, frame.bottom - 1, frame.right + 1,
+			// frame.bottom +
+			// 1);
+			// canvas.drawRect(box, paint);
+			//
+			// paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
+			// scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
+			// int middle = frame.height() / 2 + frame.top;
+			// box.set(frame.left + 2, middle - 1, frame.right - 1, middle + 2);
+			// canvas.drawRect(box, paint);
+			//
+			// // Request another update at the animation interval, but only
+			// // repaint the laser line,
+			// // not the entire viewfinder mask.
 			postInvalidateDelayed(ANIMATION_DELAY, box.left, box.top, box.right, box.bottom);
 		}
+		// }
 	}
 
 	/**
@@ -97,7 +117,7 @@ public class AugmentedView extends View {
 	 * @param barcode
 	 *            An image of the decoded barcode.
 	 */
-	public void drawResultBitmap(Result rawResult) {
+	public void drawResult(Result rawResult) {
 		result = rawResult;
 		invalidate();
 	}

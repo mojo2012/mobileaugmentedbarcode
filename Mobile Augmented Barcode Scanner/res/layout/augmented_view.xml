@@ -22,13 +22,13 @@
 		android:layout_height="fill_parent"
 		android:layout_centerInParent="true" />
 
-	<at.ftw.mabs.ui.ViewfinderView
+	<at.ftw.mabs.ui.views.ViewfinderView
 		android:id="@+id/viewfinder_view"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:background="@color/transparent" />
 
-	<at.ftw.mabs.ui.AugmentedView
+	<at.ftw.mabs.ui.views.AugmentedView
 		android:id="@+id/augmented_view"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
