@@ -57,56 +57,57 @@ import com.google.zxing.ResultPoint;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
-	private static final String	TAG							= "MABS/CaptureActivity";
+	static final String	TAG							= "MABS/CaptureActivity";
 
-	private static final int	SHARE_ID					= Menu.FIRST;
-	private static final int	HISTORY_ID					= Menu.FIRST + 1;
-	private static final int	SETTINGS_ID					= Menu.FIRST + 2;
-	private static final int	HELP_ID						= Menu.FIRST + 3;
-	private static final int	ABOUT_ID					= Menu.FIRST + 4;
+	static final int	SHARE_ID					= Menu.FIRST;
+	static final int	HISTORY_ID					= Menu.FIRST + 1;
+	static final int	SETTINGS_ID					= Menu.FIRST + 2;
+	static final int	HELP_ID						= Menu.FIRST + 3;
+	static final int	ABOUT_ID					= Menu.FIRST + 4;
 
-	private static final int	MAX_RESULT_IMAGE_SIZE		= 150;
-	private static final long	INTENT_RESULT_DURATION		= 1500L;
-	private static final float	BEEP_VOLUME					= 0.10f;
-	private static final long	VIBRATE_DURATION			= 200L;
+	static final int	MAX_RESULT_IMAGE_SIZE		= 150;
+	static final long	INTENT_RESULT_DURATION		= 1500L;
+	static final float	BEEP_VOLUME					= 0.10f;
+	static final long	VIBRATE_DURATION			= 200L;
 
-	private static final String	PRODUCT_SEARCH_URL_PREFIX	= "http://www.amazon.de";
-	private static final String	PRODUCT_SEARCH_URL_SUFFIX	= "/m/products/scan";
+	static final String	PRODUCT_SEARCH_URL_PREFIX	= "http://www.amazon.de";
+	static final String	PRODUCT_SEARCH_URL_SUFFIX	= "/m/products/scan";
 
-	private enum Source {
+	enum Source {
 		NATIVE_APP_INTENT,
 		PRODUCT_SEARCH_LINK,
 		ZXING_LINK,
 		NONE
 	}
 
-	private CaptureActivityHandler					handler;
+	CaptureActivityHandler					handler;
 
-	private ViewfinderView							viewfinderView;
-	private MediaPlayer								mediaPlayer;
-	private Result									lastResult;
-	private boolean									hasSurface;
-	private boolean									playBeep;
-	private boolean									vibrate;
-	private boolean									copyToClipboard;
-	private Source									source;
-	private String									sourceUrl;
-	private String									decodeMode;
-	private String									versionName;
+	SurfaceView								previewView;
+	ViewfinderView							viewfinderView;
+	MediaPlayer								mediaPlayer;
+	Result									lastResult;
+	boolean									hasSurface;
+	boolean									playBeep;
+	boolean									vibrate;
+	boolean									copyToClipboard;
+	Source									source;
+	String									sourceUrl;
+	String									decodeMode;
+	String									versionName;
 	// private HistoryManager historyManager;
 
-	private final OnCompletionListener				beepListener	= new BeepListener();
+	final OnCompletionListener				beepListener	= new BeepListener();
 
-	private final DialogInterface.OnClickListener	aboutListener	=
-																			new DialogInterface.OnClickListener() {
-																		public void onClick(
-																				DialogInterface dialogInterface,
-																				int i) {
-																			Intent intent = new Intent(	Intent.ACTION_VIEW,
-																										Uri.parse(getString(R.string.zxing_url)));
-																			startActivity(intent);
-																		}
-																	};
+	final DialogInterface.OnClickListener	aboutListener	=
+																	new DialogInterface.OnClickListener() {
+																public void onClick(
+																		DialogInterface dialogInterface,
+																		int i) {
+																	Intent intent = new Intent(	Intent.ACTION_VIEW,
+																								Uri.parse(getString(R.string.zxing_url)));
+																	startActivity(intent);
+																}
+															};
 
 	public Handler getHandler() {
 		return handler;
@@ -120,9 +121,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		setContentView(R.layout.capture);
+		setContentView(R.layout.augmented_view);
 
 		CameraManager.init(getApplication());
+
+		previewView = (SurfaceView) findViewById(R.id.preview_view);
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		handler = null;
 		lastResult = null;
@@ -226,12 +229,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 		if (barcode != null) {
 			drawResultPoints(barcode, rawResult);
+			viewfinderView.drawResultBitmap(barcode);
 
 			TextView formatTextView = (TextView) findViewById(R.id.status_text_view);
 			formatTextView.setVisibility(View.VISIBLE);
 			formatTextView.setText(rawResult.getText());
 
-			handler.sendEmptyMessage(R.id.restart_preview);
+			// handler.sendEmptyMessage(R.id.restart_preview);
 		}
 	}
 
@@ -268,6 +272,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 					canvas.drawPoint(point.getX(), point.getY(), paint);
 				}
 			}
+
+			previewView.draw(canvas);
 		}
 	}
 
