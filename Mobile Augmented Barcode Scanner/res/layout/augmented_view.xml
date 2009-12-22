@@ -28,7 +28,11 @@
 		android:layout_height="fill_parent"
 		android:background="@color/transparent" />
 
-	
+	<at.ftw.mabs.ui.AugmentedView
+		android:id="@+id/augmented_view"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="@color/transparent" />
 
 	<LinearLayout
 		android:orientation="vertical"

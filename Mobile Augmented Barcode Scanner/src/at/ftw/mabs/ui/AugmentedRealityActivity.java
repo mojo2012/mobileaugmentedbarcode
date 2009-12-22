@@ -46,6 +46,7 @@ import android.widget.TextView;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.scanner.CaptureActivityHandler;
+import at.ftw.mabs.ui.views.ViewfinderView;
 
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
@@ -56,7 +57,7 @@ import com.google.zxing.ResultPoint;
  * 
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class AugmentedRealityActivity extends Activity implements SurfaceHolder.Callback {
 	static final String	TAG							= "MABS/CaptureActivity";
 
 	static final int	SHARE_ID					= Menu.FIRST;

@@ -1,4 +1,20 @@
-package at.ftw.mabs.ui;
+/*
+ * Copyright (C) 2008 ZXing authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package at.ftw.mabs.ui.views;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,8 +27,15 @@ import android.view.View;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 
-public class AugmentedView extends View {
-	private static final String	TAG				= "MABS/AugmentedView";
+/**
+ * This view is overlaid on top of the camera preview. It adds the viewfinder
+ * rectangle and partial transparency outside it, as well as the laser scanner
+ * animation and result points.
+ * 
+ * @author dswitkin@google.com (Daniel Switkin)
+ */
+public final class ViewfinderView extends View {
+	private static final String	TAG				= "MABS/ViewfinderView";
 	private static final int[]	SCANNER_ALPHA	= { 0, 64, 128, 192, 255, 192, 128, 64 };
 	private static final long	ANIMATION_DELAY	= 100L;
 
@@ -26,7 +49,7 @@ public class AugmentedView extends View {
 	private int					scannerAlpha;
 
 	// This constructor is used when the class is built from an XML resource.
-	public AugmentedView(Context context, AttributeSet attrs) {
+	public ViewfinderView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
 		// Initialize these once for performance rather than calling them every
@@ -91,6 +114,11 @@ public class AugmentedView extends View {
 			// not the entire viewfinder mask.
 			postInvalidateDelayed(ANIMATION_DELAY, box.left, box.top, box.right, box.bottom);
 		}
+	}
+
+	public void drawViewfinder() {
+		resultBitmap = null;
+		invalidate();
 	}
 
 	/**
