@@ -19,7 +19,7 @@ package com.google.zxing;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import com.google.zxing.image.BinaryBitmap;
+import com.google.zxing.common.BinaryBitmap;
 import com.google.zxing.oned.MultiFormatOneDReader;
 import com.google.zxing.result.Result;
 

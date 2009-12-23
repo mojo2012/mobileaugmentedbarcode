@@ -16,47 +16,49 @@
 
 package com.google.zxing.oned;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.ReaderException;
-import com.google.zxing.common.BitArray;
-import com.google.zxing.image.BinaryBitmap;
-import com.google.zxing.result.Result;
-
 import java.util.Hashtable;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.ReaderException;
+import com.google.zxing.common.BinaryBitmap;
+import com.google.zxing.common.BitArray;
+import com.google.zxing.result.Result;
+
 /**
- * <p>Implements decoding of the UPC-A format.</p>
- *
+ * <p>
+ * Implements decoding of the UPC-A format.
+ * </p>
+ * 
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
 public final class UPCAReader implements UPCEANReader {
 
-  private final UPCEANReader ean13Reader = new EAN13Reader();
+	private final UPCEANReader	ean13Reader	= new EAN13Reader();
 
-  public Result decodeRow(int rowNumber, BitArray row, int[] startGuardRange) throws ReaderException {
-    return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, startGuardRange));
-  }
+	public Result decodeRow(int rowNumber, BitArray row, int[] startGuardRange) throws ReaderException {
+		return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, startGuardRange));
+	}
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints) throws ReaderException {
-    return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, hints));
-  }
+	public Result decodeRow(int rowNumber, BitArray row, Hashtable hints) throws ReaderException {
+		return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, hints));
+	}
 
-  public Result decode(BinaryBitmap image) throws ReaderException {
-    return maybeReturnResult(ean13Reader.decode(image));
-  }
+	public Result decode(BinaryBitmap image) throws ReaderException {
+		return maybeReturnResult(ean13Reader.decode(image));
+	}
 
-  public Result decode(BinaryBitmap image, Hashtable hints) throws ReaderException {
-    return maybeReturnResult(ean13Reader.decode(image, hints));
-  }
+	public Result decode(BinaryBitmap image, Hashtable hints) throws ReaderException {
+		return maybeReturnResult(ean13Reader.decode(image, hints));
+	}
 
-  private static Result maybeReturnResult(Result result) throws ReaderException {
-    String text = result.getText();
-    if (text.charAt(0) == '0') {
-      return new Result(text.substring(1), null, result.getResultPoints(), BarcodeFormat.UPC_A);
-    } else {
-      throw ReaderException.getInstance();
-    }
-  }
+	private static Result maybeReturnResult(Result result) throws ReaderException {
+		String text = result.getText();
+		if (text.charAt(0) == '0') {
+			return new Result(text.substring(1), null, result.getResultPoints(), BarcodeFormat.UPC_A);
+		} else {
+			throw ReaderException.getInstance();
+		}
+	}
 
 }

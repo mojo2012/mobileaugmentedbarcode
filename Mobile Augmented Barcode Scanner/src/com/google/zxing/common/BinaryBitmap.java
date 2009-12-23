@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.zxing.image;
+package com.google.zxing.common;
 
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.ReaderException;
-import com.google.zxing.common.BitArray;
-import com.google.zxing.common.BitMatrix;
 
 /**
  * This class is the core bitmap class used by ZXing to represent 1 bit data. Reader objects
