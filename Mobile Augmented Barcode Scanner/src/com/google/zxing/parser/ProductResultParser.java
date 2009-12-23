@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.zxing.result;
+package com.google.zxing.parser;
 
 import com.google.zxing.common.BarcodeFormat;
 import com.google.zxing.reader.UPCEReader;
+import com.google.zxing.result.ProductParsedResult;
+import com.google.zxing.result.Result;
 
 /**
  * Parses strings of digits that represent a UPC code.

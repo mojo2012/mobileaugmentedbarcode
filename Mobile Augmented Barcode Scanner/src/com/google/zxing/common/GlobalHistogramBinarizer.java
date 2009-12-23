@@ -16,7 +16,6 @@
 
 package com.google.zxing.common;
 
-
 /**
  * This Binarizer implementation uses the old ZXing global histogram approach.
  * It is suitable for low-end mobile devices which don't have enough CPU or

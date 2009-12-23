@@ -16,7 +16,6 @@
 
 package com.google.zxing.common;
 
-
 /**
  * This class implements a local thresholding algorithm, which while slower than
  * the GlobalHistogramBinarizer, is fairly efficient for what it does. It is

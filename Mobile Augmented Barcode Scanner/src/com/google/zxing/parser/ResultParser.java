@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.zxing.result;
+package com.google.zxing.parser;
 
 import java.util.Hashtable;
 import java.util.Vector;
+
+import com.google.zxing.result.ParsedResult;
+import com.google.zxing.result.Result;
+import com.google.zxing.result.TextParsedResult;
 
 
 /**

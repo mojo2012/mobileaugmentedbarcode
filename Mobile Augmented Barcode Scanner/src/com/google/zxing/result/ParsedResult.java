@@ -16,6 +16,8 @@
 
 package com.google.zxing.result;
 
+import com.google.zxing.parser.ResultParser;
+
 
 /**
  * <p>Abstract class representing the result of decoding a barcode, as more than
