@@ -16,47 +16,50 @@
 
 package at.ftw.mabs.camera.colormodels;
 
-import com.google.zxing.LuminanceSource;
-
 import android.graphics.Bitmap;
+
+import com.google.zxing.LuminanceSource;
 
 /**
  * An extension of LuminanceSource which adds some Android-specific methods.
- *
+ * 
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public abstract class BaseLuminanceSource extends LuminanceSource {
 
-  BaseLuminanceSource(int width, int height) {
-    super(width, height);
-  }
+	BaseLuminanceSource(int width, int height) {
+		super(width, height);
+	}
 
-  /**
-   * Requests the width of the underlying platform's bitmap.
-   *
-   * @return The width in pixels.
-   */
-  public abstract int getDataWidth();
+	/**
+	 * Requests the width of the underlying platform's bitmap.
+	 * 
+	 * @return The width in pixels.
+	 */
+	public abstract int getDataWidth();
 
-  /**
-   * Requests the height of the underlying platform's bitmap.
-   *
-   * @return The height in pixels.
-   */
-  public abstract int getDataHeight();
+	/**
+	 * Requests the height of the underlying platform's bitmap.
+	 * 
+	 * @return The height in pixels.
+	 */
+	public abstract int getDataHeight();
 
-  /**
-   * Creates a greyscale Android Bitmap from the YUV data based on the crop rectangle.
-   *
-   * @return An 8888 bitmap.
-   */
-  public abstract Bitmap renderCroppedGreyscaleBitmap();
+	/**
+	 * Creates a greyscale Android Bitmap from the YUV data based on the crop
+	 * rectangle.
+	 * 
+	 * @return An 8888 bitmap.
+	 */
+	public abstract Bitmap renderCroppedGreyscaleBitmap();
 
-  /**
-   * Creates a color Android Bitmap from the YUV data, ignoring the crop rectangle.
-   *
-   * @param halfSize If true, downsample to 50% in each dimension, otherwise not.
-   * @return An 8888 bitmap.
-   */
-  public abstract Bitmap renderFullColorBitmap(boolean halfSize);
+	/**
+	 * Creates a color Android Bitmap from the YUV data, ignoring the crop
+	 * rectangle.
+	 * 
+	 * @param halfSize
+	 *            If true, downsample to 50% in each dimension, otherwise not.
+	 * @return An 8888 bitmap.
+	 */
+	public abstract Bitmap renderFullColorBitmap(boolean halfSize);
 }

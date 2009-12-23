@@ -43,13 +43,9 @@ public final class MultiFormatOneDReader extends AbstractOneDReader {
 					possibleFormats.contains(BarcodeFormat.UPC_E)) {
 				readers.addElement(new MultiFormatUPCEANReader(hints));
 			}
-			if (possibleFormats.contains(BarcodeFormat.ITF)) {
-				readers.addElement(new ITFReader());
-			}
 		}
 		if (readers.isEmpty()) {
 			readers.addElement(new MultiFormatUPCEANReader(hints));
-			readers.addElement(new ITFReader());
 		}
 	}
 

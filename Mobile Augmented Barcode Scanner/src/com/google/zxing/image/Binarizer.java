@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.zxing;
+package com.google.zxing.image;
 
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.ReaderException;
 import com.google.zxing.common.BitArray;
 import com.google.zxing.common.BitMatrix;
 
