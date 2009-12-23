@@ -65,7 +65,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		NONE
 	}
 
-	ActivityHandler					handler;
+	ActivityHandler							handler;
 
 	ViewfinderView							viewfinderView;
 	AugmentedView							augmentedView;
@@ -119,6 +119,9 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		statusTextView = (TextView) findViewById(R.id.status_text_view);
 
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+
+		drawViewfinder();
+
 		handler = null;
 		lastResult = null;
 		hasSurface = false;
