@@ -21,6 +21,7 @@ import java.util.Vector;
 
 import com.google.zxing.image.BinaryBitmap;
 import com.google.zxing.oned.MultiFormatOneDReader;
+import com.google.zxing.result.Result;
 
 /**
  * MultiFormatReader is a convenience class and the main entry point into the

@@ -17,10 +17,10 @@
 package com.google.zxing.multi;
 
 import com.google.zxing.Reader;
-import com.google.zxing.Result;
 import com.google.zxing.ReaderException;
-import com.google.zxing.ResultPoint;
 import com.google.zxing.image.BinaryBitmap;
+import com.google.zxing.result.Result;
+import com.google.zxing.result.ResultPoint;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -28,7 +28,7 @@ import java.util.Vector;
 /**
  * <p>Attempts to locate multiple barcodes in an image by repeatedly decoding portion of the image.
  * After one barcode is found, the areas left, above, right and below the barcode's
- * {@link com.google.zxing.ResultPoint}s are scanned, recursively.</p>
+ * {@link com.google.zxing.result.ResultPoint}s are scanned, recursively.</p>
  *
  * <p>A caller may want to also employ {@link ByQuadrantReader} when attempting to find multiple
  * 2D barcodes, like QR Codes, in an image, where the presence of multiple barcodes might prevent

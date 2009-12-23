@@ -19,6 +19,7 @@ package com.google.zxing;
 import java.util.Hashtable;
 
 import com.google.zxing.image.BinaryBitmap;
+import com.google.zxing.result.Result;
 
 /**
  * Implementations of this interface can decode an image of a barcode in some format into

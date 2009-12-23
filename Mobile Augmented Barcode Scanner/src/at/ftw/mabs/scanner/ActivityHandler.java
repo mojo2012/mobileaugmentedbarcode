@@ -27,7 +27,7 @@ import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.ui.AugmentedRealityActivity;
 
-import com.google.zxing.Result;
+import com.google.zxing.result.Result;
 
 /**
  * This class handles all the messaging which comprises the state machine for

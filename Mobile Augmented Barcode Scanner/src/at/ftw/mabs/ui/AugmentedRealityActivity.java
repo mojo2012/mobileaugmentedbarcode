@@ -32,8 +32,8 @@ import at.ftw.mabs.scanner.ActivityHandler;
 import at.ftw.mabs.ui.views.AugmentedView;
 import at.ftw.mabs.ui.views.ViewfinderView;
 
-import com.google.zxing.Result;
-import com.google.zxing.ResultPoint;
+import com.google.zxing.result.Result;
+import com.google.zxing.result.ResultPoint;
 
 /**
  * The barcode reader activity itself. This is loosely based on the

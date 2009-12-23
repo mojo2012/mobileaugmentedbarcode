@@ -32,10 +32,10 @@ import at.ftw.mabs.ui.AugmentedRealityActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ReaderException;
-import com.google.zxing.Result;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.image.BinaryBitmap;
 import com.google.zxing.oned.EAN13Reader;
+import com.google.zxing.result.Result;
 
 /**
  * This thread does all the heavy lifting of decoding the images.

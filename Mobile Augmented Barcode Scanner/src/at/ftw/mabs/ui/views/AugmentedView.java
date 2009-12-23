@@ -15,7 +15,7 @@ import android.view.View;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.ui.AugmentedRealityActivity;
 
-import com.google.zxing.ResultPoint;
+import com.google.zxing.result.ResultPoint;
 
 public class AugmentedView extends View {
 	static final String			TAG				= "MABS/AugmentedView";

@@ -18,7 +18,7 @@ import at.ftw.mabs.camera.colormodels.BaseLuminanceSource;
 import at.ftw.mabs.camera.colormodels.InterleavedYUV422LuminanceSource;
 import at.ftw.mabs.camera.colormodels.PlanarYUVLuminanceSource;
 
-import com.google.zxing.ResultPoint;
+import com.google.zxing.result.ResultPoint;
 
 public class CameraManager {
 	private static final String				TAG					= "MABS/CameraManager";
