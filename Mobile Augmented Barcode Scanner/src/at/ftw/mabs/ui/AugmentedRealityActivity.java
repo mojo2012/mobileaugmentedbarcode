@@ -28,7 +28,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
-import at.ftw.mabs.scanner.CaptureActivityHandler;
+import at.ftw.mabs.scanner.ActivityHandler;
 import at.ftw.mabs.ui.views.AugmentedView;
 import at.ftw.mabs.ui.views.ViewfinderView;
 
@@ -65,7 +65,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		NONE
 	}
 
-	CaptureActivityHandler					handler;
+	ActivityHandler					handler;
 
 	ViewfinderView							viewfinderView;
 	AugmentedView							augmentedView;
@@ -279,7 +279,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		}
 		if (handler == null) {
 			boolean beginScanning = lastResult == null;
-			handler = new CaptureActivityHandler(this, beginScanning);
+			handler = new ActivityHandler(this, beginScanning);
 		}
 	}
 

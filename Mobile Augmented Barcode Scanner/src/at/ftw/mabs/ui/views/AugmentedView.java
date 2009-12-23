@@ -56,6 +56,8 @@ public class AugmentedView extends View {
 		} else {
 			canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
 		}
+
+		super.onDraw(canvas);
 	}
 
 	/**

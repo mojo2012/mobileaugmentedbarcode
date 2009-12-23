@@ -35,7 +35,7 @@ import com.google.zxing.Result;
  * 
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class CaptureActivityHandler extends Handler {
+public final class ActivityHandler extends Handler {
 	private static final String		TAG	= "MABS/CaptureActivityHandler";
 
 	private final AugmentedRealityActivity	activity;
@@ -48,7 +48,7 @@ public final class CaptureActivityHandler extends Handler {
 		DONE
 	}
 
-	public CaptureActivityHandler(AugmentedRealityActivity captureActivity, boolean beginScanning) {
+	public ActivityHandler(AugmentedRealityActivity captureActivity, boolean beginScanning) {
 		this.activity = captureActivity;
 
 		decodeThread = new DecodeThread(captureActivity);
