@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing;
+package com.google.zxing.common;
 
 /**
  * These are a set of hints that you may pass to Writers to specify their behavior.

@@ -16,7 +16,6 @@
 
 package com.google.zxing.common;
 
-import com.google.zxing.LuminanceSource;
 
 /**
  * This class implements a local thresholding algorithm, which while slower than

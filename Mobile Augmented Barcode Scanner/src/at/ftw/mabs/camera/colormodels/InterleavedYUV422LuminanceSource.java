@@ -18,7 +18,7 @@ package at.ftw.mabs.camera.colormodels;
 
 import android.graphics.Bitmap;
 
-import com.google.zxing.LuminanceSource;
+import com.google.zxing.common.LuminanceSource;
 
 /**
  * This object extends LuminanceSource around an array of YUV data returned from

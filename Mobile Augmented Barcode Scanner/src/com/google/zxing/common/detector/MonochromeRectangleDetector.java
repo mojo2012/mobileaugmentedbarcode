@@ -16,8 +16,8 @@
 
 package com.google.zxing.common.detector;
 
-import com.google.zxing.ReaderException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.ReaderException;
 import com.google.zxing.result.ResultPoint;
 
 /**
@@ -95,7 +95,7 @@ public final class MonochromeRectangleDetector {
    * @param maxWhiteRun maximum run of white pixels that can still be considered to be within
    *  the barcode
    * @return a {@link com.google.zxing.result.ResultPoint} encapsulating the corner that was found
-   * @throws com.google.zxing.ReaderException if such a point cannot be found
+   * @throws com.google.zxing.common.ReaderException if such a point cannot be found
    */
   private ResultPoint findCornerFromCenter(int centerX, int deltaX, int left, int right,
       int centerY, int deltaY, int top, int bottom, int maxWhiteRun) throws ReaderException {

@@ -16,8 +16,6 @@
 
 package com.google.zxing.common;
 
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.ReaderException;
 
 /**
  * This class hierarchy provides a set of methods to convert luminance data to 1 bit data.

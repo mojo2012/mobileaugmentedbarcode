@@ -16,8 +16,6 @@
 
 package com.google.zxing.common;
 
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.ReaderException;
 
 /**
  * This Binarizer implementation uses the old ZXing global histogram approach.

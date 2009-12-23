@@ -16,7 +16,6 @@
 
 package com.google.zxing.common;
 
-import com.google.zxing.ReaderException;
 
 /**
  * @author Sean Owen

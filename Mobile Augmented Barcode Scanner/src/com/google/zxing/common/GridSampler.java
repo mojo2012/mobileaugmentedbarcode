@@ -16,7 +16,6 @@
 
 package com.google.zxing.common;
 
-import com.google.zxing.ReaderException;
 
 /**
  * Implementations of this class can, given locations of finder patterns for a QR code in an

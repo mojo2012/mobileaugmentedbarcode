@@ -18,7 +18,7 @@ package at.ftw.mabs.camera.colormodels;
 
 import android.graphics.Bitmap;
 
-import com.google.zxing.LuminanceSource;
+import com.google.zxing.common.LuminanceSource;
 
 /**
  * An extension of LuminanceSource which adds some Android-specific methods.
