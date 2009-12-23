@@ -18,7 +18,7 @@ package com.google.zxing.result;
 
 import java.util.Hashtable;
 
-import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BarcodeFormat;
 
 /**
  * <p>Encapsulates the result of decoding a barcode within an image.</p>

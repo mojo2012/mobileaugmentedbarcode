@@ -16,8 +16,8 @@
 
 package com.google.zxing.result;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.oned.UPCEReader;
+import com.google.zxing.common.BarcodeFormat;
+import com.google.zxing.reader.UPCEReader;
 
 /**
  * Parses strings of digits that represent a UPC code.
