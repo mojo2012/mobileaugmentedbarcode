@@ -17,8 +17,8 @@
 package com.google.zxing.oned;
 
 import com.google.zxing.ReaderException;
-import com.google.zxing.Result;
 import com.google.zxing.common.BitArray;
+import com.google.zxing.result.Result;
 
 /**
  * <p>This interfaces captures additional functionality that readers of
