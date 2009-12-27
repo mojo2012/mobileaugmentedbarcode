@@ -14,18 +14,17 @@ import java.util.TreeMap;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public class SignedRequestsHelper {
 	private static final String	UTF8_CHARSET			= "UTF-8";
 	private static final String	HMAC_SHA256_ALGORITHM	= "HmacSHA256";
 	private static final String	REQUEST_URI				= "/onca/xml";
 	private static final String	REQUEST_METHOD			= "GET";
 
-	private final String		endpoint				= "ecs.amazonaws.com";		// must
+	private final String		endpoint				= "ecs.amazonaws.com";							// must
 	// be
 	// lowercase
-	private final String		awsAccessKeyId			= "YOUR AWS ACCESS KEY";
-	private final String		awsSecretKey			= "YOUR AWS SECRET KEY";
+	private final String		awsAccessKeyId			= "AKIAJFGRIDCBAGNA2KNQ";
+	private final String		awsSecretKey			= "1R3lGPIzZJ/rQsPI7M1IMZ4w2Z73q45DK4eQfGXA";
 
 	private SecretKeySpec		secretKeySpec			= null;
 	private Mac					mac						= null;
