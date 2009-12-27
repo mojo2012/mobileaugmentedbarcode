@@ -1,4 +1,4 @@
-package at.ftw.mabs.internet;
+package at.ftw.mabs.ui.infolayers;
 
 import android.graphics.Canvas;
 
