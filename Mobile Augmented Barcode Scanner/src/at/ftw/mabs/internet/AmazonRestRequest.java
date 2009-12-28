@@ -13,40 +13,42 @@ import at.ftw.mabs.internet.helpers.EncryptionHelper;
 import at.ftw.mabs.internet.helpers.UrlHelper;
 
 public class AmazonRestRequest {
+	private static AmazonRestRequest	instance			= null;
+
 	// must be lower case
-	static final String	endpoint			= "ecs.amazonaws.com";
-	static final String	REQUEST_URI			= "/onca/xml";
-	static final String	REQUEST_METHOD		= "GET";
-	static final String	UTF8_CHARSET		= "UTF-8";
+	static final String					endpoint			= "ecs.amazonaws.com";
+	static final String					REQUEST_URI			= "/onca/xml";
+	static final String					REQUEST_METHOD		= "GET";
+	static final String					UTF8_CHARSET		= "UTF-8";
 
-	static final String	awsAccessKeyId		= "AKIAJFGRIDCBAGNA2KNQ";
-	static final String	awsSecretKey		= "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";
+	static final String					awsAccessKeyId		= "AKIAJFGRIDCBAGNA2KNQ";
+	static final String					awsSecretKey		= "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";
 
-	static final String	ACCESS_KEY_ID_KEY	= "AWSAccessKeyId";
-	static final String	ACCESS_KEY_ID		= awsAccessKeyId;
-	static final String	ID_TYPE_KEY			= "IdType";
-	static final String	ID_TYPE				= "EAN";
-	static final String	ITEM_ID_KEY			= "ItemId";
-	static final String	KEYWORDS_KEY		= "Keywords";
-	static final String	OPERATION_KEY		= "Operation";
-	static final String	OPERATION			= "ItemLookup";
-	static final String	RESPONSE_GROUP_KEY	= "ResponseGroup";
-	static final String	RESPONSE_GROUP		= "Reviews";
-	static final String	SEARCH_INDEX_KEY	= "SearchIndex";
-	static final String	SEARCH_INDEX		= "Books";
-	static final String	SERVICE_KEY			= "Service";
-	static final String	SERVICE				= "AWSECommerceService";
-	static final String	VERSION_KEY			= "Version";
-	static final String	VERSION				= "2009-12-31";
+	static final String					ACCESS_KEY_ID_KEY	= "AWSAccessKeyId";
+	static final String					ACCESS_KEY_ID		= awsAccessKeyId;
+	static final String					ID_TYPE_KEY			= "IdType";
+	static final String					ID_TYPE				= "EAN";
+	static final String					ITEM_ID_KEY			= "ItemId";
+	static final String					KEYWORDS_KEY		= "Keywords";
+	static final String					OPERATION_KEY		= "Operation";
+	static final String					OPERATION			= "ItemLookup";
+	static final String					RESPONSE_GROUP_KEY	= "ResponseGroup";
+	static final String					RESPONSE_GROUP		= "Reviews";
+	static final String					SEARCH_INDEX_KEY	= "SearchIndex";
+	static final String					SEARCH_INDEX		= "Books";
+	static final String					SERVICE_KEY			= "Service";
+	static final String					SERVICE				= "AWSECommerceService";
+	static final String					VERSION_KEY			= "Version";
+	static final String					VERSION				= "2009-12-31";
 
-	EncryptionHelper	encryptionHelper;
-	UrlHelper			urlHelper;
-	ContentDownloader	contentDownloader;
+	EncryptionHelper					encryptionHelper;
+	UrlHelper							urlHelper;
+	ContentDownloader					contentDownloader;
 
-	Map<String, String>	urlParams			= new TreeMap<String, String>();
-	byte[]				secretyKeyBytes;
+	Map<String, String>					urlParams			= new TreeMap<String, String>();
+	byte[]								secretyKeyBytes;
 
-	public AmazonRestRequest() {
+	private AmazonRestRequest() {
 		encryptionHelper = EncryptionHelper.getInstance();
 		urlHelper = UrlHelper.getInstance();
 		contentDownloader = ContentDownloader.getInstance();
@@ -65,6 +67,14 @@ public class AmazonRestRequest {
 		urlParams.put(SEARCH_INDEX_KEY, SEARCH_INDEX);
 		urlParams.put(SERVICE_KEY, SERVICE);
 		urlParams.put(VERSION_KEY, VERSION);
+	}
+
+	public static AmazonRestRequest getInstance() {
+		if (instance == null) {
+			instance = new AmazonRestRequest();
+		}
+
+		return instance;
 	}
 
 	/**
