@@ -1,4 +1,4 @@
-package at.ftw.mabs.internet;
+package at.ftw.mabs.internet.helpers;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

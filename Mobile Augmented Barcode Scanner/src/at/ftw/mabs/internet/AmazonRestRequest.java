@@ -17,6 +17,7 @@ import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 import at.ftw.mabs.internet.helpers.EncryptionHelper;
+import at.ftw.mabs.internet.helpers.UrlHelper;
 
 public class AmazonRestRequest {
 	static final String	UTF8_CHARSET		= "UTF-8";
