@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
+import at.ftw.mabs.internet.AmazonRestRequest;
 import at.ftw.mabs.scanner.ActivityHandler;
 import at.ftw.mabs.ui.views.AugmentedView;
 import at.ftw.mabs.ui.views.ViewfinderView;
@@ -57,6 +58,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	static final String	PRODUCT_SEARCH_URL_PREFIX	= "http://www.amazon.de";
 	static final String	PRODUCT_SEARCH_URL_SUFFIX	= "/m/products/scan";
+
+	AmazonRestRequest	amazonAccess;
 
 	enum Source {
 		NATIVE_APP_INTENT,
@@ -110,6 +113,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.augmented_view);
+
+		amazonAccess = AmazonRestRequest.getInstance();
 
 		CameraManager.init(getApplication());
 
@@ -229,8 +234,10 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				// drawResultPoints(barcode, rawResult);
 				augmentedView.drawResult(rawResult.getResultPoints());
 
+				String rating = "Rating: " + amazonAccess.getRating(rawResult.getText());
+				statusTextView.setText("ISBN: " + rawResult.getText() + ", " + rating);
+
 				statusTextView.setVisibility(View.VISIBLE);
-				statusTextView.setText(rawResult.getText());
 
 				handler.sendEmptyMessage(R.id.restart_preview);
 			}
