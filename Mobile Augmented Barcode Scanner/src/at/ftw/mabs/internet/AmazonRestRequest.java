@@ -39,7 +39,8 @@ public class AmazonRestRequest {
 	static final String					SERVICE_KEY			= "Service";
 	static final String					SERVICE				= "AWSECommerceService";
 	static final String					VERSION_KEY			= "Version";
-	static final String					VERSION				= "2009-12-31";
+
+	static final String					TIMESTAMP_FORMAT	= "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 	EncryptionHelper					encryptionHelper;
 	UrlHelper							urlHelper;
@@ -66,7 +67,7 @@ public class AmazonRestRequest {
 		urlParams.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP);
 		urlParams.put(SEARCH_INDEX_KEY, SEARCH_INDEX);
 		urlParams.put(SERVICE_KEY, SERVICE);
-		urlParams.put(VERSION_KEY, VERSION);
+
 	}
 
 	public static AmazonRestRequest getInstance() {
@@ -113,7 +114,8 @@ public class AmazonRestRequest {
 
 		sortedParamMap.put(ITEM_ID_KEY, isbn);
 		sortedParamMap.put(KEYWORDS_KEY, isbn);
-		sortedParamMap.put("Timestamp", timestamp());
+		urlParams.put(VERSION_KEY, timestamp("yyyy-MM-dd"));
+		sortedParamMap.put("Timestamp", timestamp(TIMESTAMP_FORMAT));
 
 		String canonicalQS = urlHelper.canonicalize(sortedParamMap);
 
@@ -136,10 +138,10 @@ public class AmazonRestRequest {
 	 * 
 	 * @return
 	 */
-	String timestamp() {
+	String timestamp(String format) {
 		String timestamp = null;
 		Calendar cal = Calendar.getInstance();
-		DateFormat dfm = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		DateFormat dfm = new SimpleDateFormat(format);
 		dfm.setTimeZone(TimeZone.getTimeZone("GMT"));
 		timestamp = dfm.format(cal.getTime());
 		return timestamp;
