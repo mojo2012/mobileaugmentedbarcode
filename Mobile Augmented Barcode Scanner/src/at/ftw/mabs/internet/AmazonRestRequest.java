@@ -31,9 +31,6 @@ public class AmazonRestRequest {
 	final String		awsSecretKey		= "1R3lGPIzZJ/rQsPI7M1IMZ4w2Z73q45DK4eQfGXA";
 	byte[]				secretyKeyBytes;
 
-	EncryptionHelper	encryptionHelper;
-	UrlHelper			urlHelper;
-
 	static final String	ACCESS_KEY			= "AKIAJFGRIDCBAGNA2KNQ";
 	static final String	ID_TYPE_KEY			= "IdType";
 	static final String	ID_TYPE				= "EAN";
@@ -50,6 +47,8 @@ public class AmazonRestRequest {
 	static final String	VERSION_KEY			= "Version";
 	static final String	VERSION				= "2009-12-31";
 
+	EncryptionHelper	encryptionHelper;
+	UrlHelper			urlHelper;
 	Map<String, String>	urlParams			= new TreeMap<String, String>();
 
 	public AmazonRestRequest() {

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.SortedMap;
 
 public class UrlHelper {
-	static UrlHelper	instance;
+	static UrlHelper	instance		= null;
 
 	static final String	UTF8_CHARSET	= "UTF-8";
 
