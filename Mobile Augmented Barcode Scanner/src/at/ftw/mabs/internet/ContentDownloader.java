@@ -14,7 +14,7 @@ public class ContentDownloader {
 	private ContentDownloader() {
 	}
 
-	public ContentDownloader getInstancen() {
+	public static ContentDownloader getInstance() {
 		if (instance == null) {
 			instance = new ContentDownloader();
 		}

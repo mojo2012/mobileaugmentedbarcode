@@ -9,29 +9,21 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
-import android.util.Log;
 import at.ftw.mabs.internet.helpers.EncryptionHelper;
 import at.ftw.mabs.internet.helpers.UrlHelper;
 
 public class AmazonRestRequest {
-	static final String	UTF8_CHARSET		= "UTF-8";
+	// must be lower case
+	static final String	endpoint			= "ecs.amazonaws.com";
 	static final String	REQUEST_URI			= "/onca/xml";
 	static final String	REQUEST_METHOD		= "GET";
+	static final String	UTF8_CHARSET		= "UTF-8";
 
-	// must be lower case
-	final String		endpoint			= "ecs.amazonaws.com";
+	static final String	awsAccessKeyId		= "AKIAJFGRIDCBAGNA2KNQ";
+	static final String	awsSecretKey		= "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";
 
-	final String		awsAccessKeyId		= "AKIAJFGRIDCBAGNA2KNQ";
-	final String		awsSecretKey		= "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";
-	byte[]				secretyKeyBytes;
-
-	static final String	ACCESS_KEY			= "AKIAJFGRIDCBAGNA2KNQ";
+	static final String	ACCESS_KEY_ID_KEY	= "AWSAccessKeyId";
+	static final String	ACCESS_KEY_ID		= awsAccessKeyId;
 	static final String	ID_TYPE_KEY			= "IdType";
 	static final String	ID_TYPE				= "EAN";
 	static final String	ITEM_ID_KEY			= "ItemId";
@@ -49,11 +41,15 @@ public class AmazonRestRequest {
 
 	EncryptionHelper	encryptionHelper;
 	UrlHelper			urlHelper;
+	ContentDownloader	contentDownloader;
+
 	Map<String, String>	urlParams			= new TreeMap<String, String>();
+	byte[]				secretyKeyBytes;
 
 	public AmazonRestRequest() {
 		encryptionHelper = EncryptionHelper.getInstance();
 		urlHelper = UrlHelper.getInstance();
+		contentDownloader = ContentDownloader.getInstance();
 
 		try {
 			secretyKeyBytes = awsSecretKey.getBytes(UTF8_CHARSET);
@@ -62,6 +58,7 @@ public class AmazonRestRequest {
 			e.printStackTrace();
 		}
 
+		urlParams.put(ACCESS_KEY_ID_KEY, ACCESS_KEY_ID);
 		urlParams.put(ID_TYPE_KEY, ID_TYPE);
 		urlParams.put(OPERATION_KEY, OPERATION);
 		urlParams.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP);
@@ -70,41 +67,14 @@ public class AmazonRestRequest {
 		urlParams.put(VERSION_KEY, VERSION);
 	}
 
-	String request(String requestUrl) {
-		String response = "";
-
-		Log.v("Test", requestUrl);
-
-		HttpClient client = new DefaultHttpClient();
-
-		try {
-			HttpGet get = new HttpGet(requestUrl);
-
-			HttpResponse rsp = client.execute(get);
-			response = EntityUtils.toString(rsp.getEntity());
-
-			return response;
-		} catch (Exception ex) {
-			Log.e("Test", ex.getMessage());
-			return null;
-		}
-	}
-
-	String createRequestUrl(String isbn) {
-		Map<String, String> params = new TreeMap<String, String>();
-
-		params.putAll(urlParams);
-
-		params.put(ITEM_ID_KEY, isbn);
-		params.put(KEYWORDS_KEY, isbn);
-
-		String tmpUrl = getSignedUrl(params);
-
-		return tmpUrl;
-	}
-
+	/**
+	 * Returns the Amazon rating of a given ISBN.
+	 * 
+	 * @param isbn
+	 * @return
+	 */
 	public float getRating(String isbn) {
-		String xmlResponse = request(createRequestUrl(isbn));
+		String xmlResponse = contentDownloader.requestUrlContent(createRequestUrl(isbn));
 		String rating;
 
 		String tag = "AverageRating";
@@ -128,13 +98,15 @@ public class AmazonRestRequest {
 	 * @param params
 	 * @return
 	 */
-	public String getSignedUrl(Map<String, String> params) {
-		params.put("AWSAccessKeyId", awsAccessKeyId);
-		params.put("Timestamp", timestamp());
+	String createRequestUrl(String isbn) {
+		SortedMap<String, String> sortedParamMap = new TreeMap<String, String>(urlParams);
 
-		SortedMap<String, String> sortedParamMap =
-				new TreeMap<String, String>(params);
+		sortedParamMap.put(ITEM_ID_KEY, isbn);
+		sortedParamMap.put(KEYWORDS_KEY, isbn);
+		sortedParamMap.put("Timestamp", timestamp());
+
 		String canonicalQS = urlHelper.canonicalize(sortedParamMap);
+
 		String toSign =
 				REQUEST_METHOD + "\n"
 				+ endpoint + "\n"
