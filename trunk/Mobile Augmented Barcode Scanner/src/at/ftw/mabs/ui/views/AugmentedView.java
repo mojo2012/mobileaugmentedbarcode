@@ -15,7 +15,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import at.ftw.mabs.camera.CameraManager;
-import at.ftw.mabs.internet.helpers.TimestampHelper;
 import at.ftw.mabs.ui.AugmentedRealityActivity;
 import at.ftw.mabs.ui.infolayers.IInfoLayer;
 
@@ -33,7 +32,6 @@ public class AugmentedView extends View {
 
 	boolean						barcodeFound	= false;
 	String						lastBarcode		= "";
-	String						timeToHideBarcode;
 
 	// This constructor is used when the class is built from an XML resource.
 	public AugmentedView(Context context, AttributeSet attrs) {
@@ -55,18 +53,21 @@ public class AugmentedView extends View {
 		if (frame != null) {
 			drawViewfinderBorder(canvas, frame);
 
-			if (!barcodeFound) {
-				if (infoLayerBitmap != null) {
-					Log.v(TAG, "resetting");
-					infoLayerBitmap = null;
-				}
-			} else {
+			if (barcodeFound) {
 				paint.setStyle(Style.FILL);
 
-				if (infoLayerBitmap == null)
+				if (infoLayerBitmap == null) {
 					infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 42, frame.height() - 42);
+					Log.v(TAG, "New info layer requestet.");
+				}
 
 				canvas.drawBitmap(infoLayerBitmap, frame.left + 21, frame.top + 21, paint);
+			} else {
+				if (infoLayerBitmap != null) {
+					Log.v(TAG, "Removing old info layer bitmap.");
+
+					infoLayerBitmap = null;
+				}
 			}
 		}
 	}
@@ -110,20 +111,21 @@ public class AugmentedView extends View {
 	 * Timer that resets the info layer.
 	 */
 	class BarcodeResetTimer extends TimerTask {
-		View	view;
+		AugmentedView	view;
 
-		public BarcodeResetTimer(View view) {
+		public BarcodeResetTimer(AugmentedView view) {
 			this.view = view;
 		}
 
 		@Override
 		public void run() {
 			barcodeFound = false;
-			view.invalidate();
-
-			Log.v(TAG, "cancel timer");
-
+			resetTimer.cancel();
 			this.cancel();
+
+			Log.v(TAG, "Resetting augmented view.");
+
+			postInvalidate();
 		}
 	}
 
@@ -142,13 +144,8 @@ public class AugmentedView extends View {
 
 		barcodeFound = true;
 
-		TimestampHelper.getInstance().timestamp("ss");
-
-		// if (resetTimer != null)
-		// resetTimer.cancel();
-		//
-		// resetTimer = new Timer();
-		// resetTimer.schedule(new BarcodeResetTimer(this), 5000);
+		resetTimer = new Timer();
+		resetTimer.schedule(new BarcodeResetTimer(this), 2000);
 
 		invalidate();
 	}
