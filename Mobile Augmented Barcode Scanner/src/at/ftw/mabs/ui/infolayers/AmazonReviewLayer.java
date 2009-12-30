@@ -32,7 +32,7 @@ public class AmazonReviewLayer implements IInfoLayer {
 		fontPaint = new Paint();
 		fontPaint.setStyle(Paint.Style.FILL);
 		fontPaint.setColor(Color.WHITE);
-		paint.setTextAlign(Align.CENTER);
+		fontPaint.setTextAlign(Align.CENTER);
 		fontPaint.setTextSize(30);
 
 	}
@@ -61,7 +61,7 @@ public class AmazonReviewLayer implements IInfoLayer {
 			textToDraw = "ISBN not found";
 		}
 
-		canvas.drawText(textToDraw, 75, 110, fontPaint);
+		canvas.drawText(textToDraw, (width / 2), (height / 2), fontPaint);
 
 		Log.v(TAG, "Rating: " + isbn);
 
