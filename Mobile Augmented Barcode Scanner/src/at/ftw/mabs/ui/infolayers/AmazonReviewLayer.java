@@ -17,7 +17,7 @@ public class AmazonReviewLayer implements IInfoLayer {
 	Paint				paint;
 	Paint				fontPaint;
 
-	float				lastRating;
+	Double				lastRating;
 	String				lastBarcode;
 
 	public AmazonReviewLayer() {
@@ -53,7 +53,15 @@ public class AmazonReviewLayer implements IInfoLayer {
 		Rect background = new Rect(0, 0, width, height);
 		canvas.drawRect(background, paint);
 
-		canvas.drawText("Rating: " + lastRating, 75, 110, fontPaint);
+		String textToDraw = "";
+
+		if (lastRating >= 0) {
+			textToDraw = "Rating: " + lastRating;
+		} else {
+			textToDraw = "ISBN not found";
+		}
+
+		canvas.drawText(textToDraw, 75, 110, fontPaint);
 
 		Log.v(TAG, "Rating: " + isbn);
 
