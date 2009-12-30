@@ -144,8 +144,11 @@ public class AugmentedView extends View {
 
 		barcodeFound = true;
 
+		if (resetTimer != null)
+			resetTimer.cancel();
+
 		resetTimer = new Timer();
-		resetTimer.schedule(new BarcodeResetTimer(this), 2000);
+		resetTimer.schedule(new BarcodeResetTimer(this), 5000);
 
 		invalidate();
 	}
