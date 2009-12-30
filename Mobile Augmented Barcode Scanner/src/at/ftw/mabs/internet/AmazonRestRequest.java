@@ -1,15 +1,12 @@
 package at.ftw.mabs.internet;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 import at.ftw.mabs.internet.helpers.EncryptionHelper;
+import at.ftw.mabs.internet.helpers.TimestampHelper;
 import at.ftw.mabs.internet.helpers.UrlHelper;
 
 public class AmazonRestRequest {
@@ -114,8 +111,8 @@ public class AmazonRestRequest {
 
 		sortedParamMap.put(ITEM_ID_KEY, isbn);
 		sortedParamMap.put(KEYWORDS_KEY, isbn);
-		urlParams.put(VERSION_KEY, timestamp("yyyy-MM-dd"));
-		sortedParamMap.put("Timestamp", timestamp(TIMESTAMP_FORMAT));
+		urlParams.put(VERSION_KEY, TimestampHelper.getInstance().timestamp("yyyy-MM-dd"));
+		sortedParamMap.put("Timestamp", TimestampHelper.getInstance().timestamp(TIMESTAMP_FORMAT));
 
 		String canonicalQS = urlHelper.canonicalize(sortedParamMap);
 
@@ -133,17 +130,4 @@ public class AmazonRestRequest {
 		return url;
 	}
 
-	/**
-	 * Creates a timestamp needed for the signing process of the REST request.
-	 * 
-	 * @return
-	 */
-	String timestamp(String format) {
-		String timestamp = null;
-		Calendar cal = Calendar.getInstance();
-		DateFormat dfm = new SimpleDateFormat(format);
-		dfm.setTimeZone(TimeZone.getTimeZone("GMT"));
-		timestamp = dfm.format(cal.getTime());
-		return timestamp;
-	}
 }
