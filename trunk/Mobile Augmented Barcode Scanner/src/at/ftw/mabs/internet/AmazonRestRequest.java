@@ -81,7 +81,7 @@ public class AmazonRestRequest {
 	 * @param isbn
 	 * @return
 	 */
-	public float getRating(String isbn) {
+	public double getRating(String isbn) {
 		String xmlResponse = contentDownloader.requestUrlContent(createRequestUrl(isbn));
 		String rating;
 
@@ -97,7 +97,7 @@ public class AmazonRestRequest {
 			rating = "-1.0";
 		}
 
-		return Float.parseFloat(rating);
+		return Double.parseDouble(rating);
 	}
 
 	/**

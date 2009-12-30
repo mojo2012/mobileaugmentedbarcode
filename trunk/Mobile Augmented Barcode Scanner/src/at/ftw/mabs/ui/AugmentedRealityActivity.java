@@ -229,7 +229,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				// statusTextView.setText("ISBN: " + rawResult.getText() + ", "
 				// + rating);
 
-				statusTextView.setText("ISBN: " + rawResult.getText());
+				// statusTextView.setText("ISBN: " + rawResult.getText());
 
 				// statusTextView.setVisibility(View.VISIBLE);
 
