@@ -36,11 +36,11 @@ import com.google.zxing.result.Result;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class ActivityHandler extends Handler {
-	private static final String		TAG	= "MABS/CaptureActivityHandler";
+	private static final String				TAG	= "MABS/CaptureActivityHandler";
 
 	private final AugmentedRealityActivity	activity;
-	private final DecodeThread		decodeThread;
-	private State					state;
+	private final DecodeThread				decodeThread;
+	private State							state;
 
 	private enum State {
 		PREVIEW,
@@ -120,7 +120,7 @@ public final class ActivityHandler extends Handler {
 			state = State.PREVIEW;
 			CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
 			CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
-			activity.drawViewfinder();
+			// activity.drawViewfinder();
 		}
 	}
 }

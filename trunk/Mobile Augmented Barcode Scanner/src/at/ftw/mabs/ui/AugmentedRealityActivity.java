@@ -22,16 +22,14 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
-import at.ftw.mabs.internet.AmazonRestRequest;
 import at.ftw.mabs.scanner.ActivityHandler;
+import at.ftw.mabs.ui.infolayers.AmazonReviewLayer;
 import at.ftw.mabs.ui.views.AugmentedView;
-import at.ftw.mabs.ui.views.ViewfinderView;
 
 import com.google.zxing.result.Result;
 import com.google.zxing.result.ResultPoint;
@@ -59,8 +57,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	static final String	PRODUCT_SEARCH_URL_PREFIX	= "http://www.amazon.de";
 	static final String	PRODUCT_SEARCH_URL_SUFFIX	= "/m/products/scan";
 
-	AmazonRestRequest	amazonAccess;
-
 	enum Source {
 		NATIVE_APP_INTENT,
 		PRODUCT_SEARCH_LINK,
@@ -70,7 +66,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	ActivityHandler							handler;
 
-	ViewfinderView							viewfinderView;
 	AugmentedView							augmentedView;
 	MediaPlayer								mediaPlayer;
 	Result									lastResult;
@@ -114,18 +109,13 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.augmented_view);
 
-		amazonAccess = AmazonRestRequest.getInstance();
-
 		CameraManager.init(getApplication());
 
 		augmentedView = (AugmentedView) findViewById(R.id.augmented_view);
 		augmentedView.setActivity(this);
+		augmentedView.setInfoLayer(new AmazonReviewLayer());
 
 		statusTextView = (TextView) findViewById(R.id.status_text_view);
-
-		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-
-		drawViewfinder();
 
 		handler = null;
 		lastResult = null;
@@ -232,12 +222,16 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		if (rawResult != null) {
 			if (rawResult.getResultPoints().length == 2) {
 				// drawResultPoints(barcode, rawResult);
-				augmentedView.drawResult(rawResult.getResultPoints());
+				augmentedView.setBarcode(rawResult.getText());
 
-				String rating = "Rating: " + amazonAccess.getRating(rawResult.getText());
-				statusTextView.setText("ISBN: " + rawResult.getText() + ", " + rating);
+				// String rating = "Rating: " +
+				// amazonAccess.getRating(rawResult.getText());
+				// statusTextView.setText("ISBN: " + rawResult.getText() + ", "
+				// + rating);
 
-				statusTextView.setVisibility(View.VISIBLE);
+				statusTextView.setText("ISBN: " + rawResult.getText());
+
+				// statusTextView.setVisibility(View.VISIBLE);
 
 				handler.sendEmptyMessage(R.id.restart_preview);
 			}
@@ -294,14 +288,10 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	}
 
 	public void resetStatusView() {
-		viewfinderView.setVisibility(View.VISIBLE);
+		// viewfinderView.setVisibility(View.VISIBLE);
 
 		statusTextView.setText(R.string.msg_default_status);
 		lastResult = null;
-	}
-
-	public void drawViewfinder() {
-		viewfinderView.drawViewfinder();
 	}
 
 	/**
