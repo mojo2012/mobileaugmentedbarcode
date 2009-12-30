@@ -1,10 +1,12 @@
 package at.ftw.mabs.ui.infolayers;
 
-import android.graphics.Canvas;
+import android.graphics.Bitmap;
 
 public interface IInfoLayer {
 
-	public void setISBN(String ISBN);
+	public void setISBN(String isbn);
 
-	public Canvas getInfoLayer(int width, int height);
+	public Bitmap getInfoLayer(int width, int height);
+
+	public Bitmap getInfoLayer(int width, int height, String isbn);
 }
