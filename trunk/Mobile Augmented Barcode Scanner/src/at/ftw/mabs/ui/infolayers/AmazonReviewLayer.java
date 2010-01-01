@@ -1,6 +1,7 @@
 package at.ftw.mabs.ui.infolayers;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.util.Log;
+import at.ftw.mabs.R;
 import at.ftw.mabs.internet.AmazonAccess;
 
 public class AmazonReviewLayer implements IInfoLayer {
@@ -53,6 +55,11 @@ public class AmazonReviewLayer implements IInfoLayer {
 			Rect background = new Rect(0, 0, width, height);
 			canvas.drawRect(background, paint);
 
+			// Rect header = new Rect(0, 0, width, 20);
+			// paint.setColor(Color.BLACK);
+			// canvas.drawRect(background, paint);
+			// paint.setColor(Color.DKGRAY);
+
 			String textToDraw = "";
 
 			if (lastRating >= 0) {
@@ -67,6 +74,14 @@ public class AmazonReviewLayer implements IInfoLayer {
 		}
 
 		return lastBarcodeBitmap;
+	}
+
+	Bitmap generateRatingStars(double rating) {
+		Bitmap starFull = BitmapFactory.decodeResource(null, R.drawable.star_full);
+
+		Bitmap ratingStars = Bitmap.createBitmap(24 * 5, 24, Config.ARGB_8888);
+
+		return ratingStars;
 	}
 
 	@Override
