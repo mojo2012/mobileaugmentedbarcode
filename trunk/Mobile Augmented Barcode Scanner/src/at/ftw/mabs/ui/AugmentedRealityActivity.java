@@ -14,8 +14,10 @@ import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
+import at.ftw.mabs.internet.helpers.ConnectivityHelper;
 import at.ftw.mabs.scanner.ActivityHandler;
 import at.ftw.mabs.ui.infolayers.AmazonReviewLayer;
 import at.ftw.mabs.ui.views.AugmentedView;
@@ -38,6 +40,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	TextView			statusTextView;
 
 	SurfaceHolder		holder;
+	ConnectivityHelper	connectivityHelper;
 
 	boolean				hasSurface;
 
@@ -50,9 +53,12 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		loadViews();
 
 		CameraManager.init(getApplication());
+		connectivityHelper = ConnectivityHelper.getInstance(this);
 
 		handler = null;
 		hasSurface = false;
+
+		showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
 	}
 
 	/**
@@ -139,6 +145,47 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		return super.onKeyDown(keyCode, event);
 	}
 
+	/**
+	 * A valid barcode has been found, so give an indication of success and show
+	 * the results.
+	 * 
+	 * @param rawResult
+	 *            The contents of the barcode.
+	 * @param barcode
+	 *            A greyscale bitmap of the camera data which was decoded.
+	 */
+	public void handleDecode(Result rawResult, Bitmap barcode) {
+		Log.v(TAG, "Barcode found: " + rawResult.getText());
+
+		if (connectivityHelper.isInternetAvailable()) {
+			if (rawResult != null) {
+				augmentedView.setBarcode(rawResult.getText());
+
+				// setStatusText("Found ISBN: " + rawResult.getText());
+			}
+		} else {
+			showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
+		}
+
+		handler.sendEmptyMessage(R.id.restart_preview);
+	}
+
+	void showInfoMessage(String text) {
+		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+	}
+
+	void setStatusText(String text) {
+		statusTextView.setText(text);
+	}
+
+	void resetStatusText() {
+		statusTextView.setText(R.string.msg_default_status);
+	}
+
+	public Handler getHandler() {
+		return handler;
+	}
+
 	@Override
 	public void onConfigurationChanged(Configuration config) {
 		// Do nothing, this is to prevent the activity from being restarted when
@@ -158,48 +205,5 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-	}
-
-	/**
-	 * A valid barcode has been found, so give an indication of success and show
-	 * the results.
-	 * 
-	 * @param rawResult
-	 *            The contents of the barcode.
-	 * @param barcode
-	 *            A greyscale bitmap of the camera data which was decoded.
-	 */
-	public void handleDecode(Result rawResult, Bitmap barcode) {
-		Log.v(TAG, "Barcode found: " + rawResult.getText());
-
-		if (rawResult != null) {
-			if (rawResult.getResultPoints().length == 2) {
-				// drawResultPoints(barcode, rawResult);
-				augmentedView.setBarcode(rawResult.getText());
-
-				// String rating = "Rating: " +
-				// amazonAccess.getRating(rawResult.getText());
-				// statusTextView.setText("ISBN: " + rawResult.getText() + ", "
-				// + rating);
-
-				// statusTextView.setText("ISBN: " + rawResult.getText());
-
-				// statusTextView.setVisibility(View.VISIBLE);
-
-				handler.sendEmptyMessage(R.id.restart_preview);
-			}
-		}
-	}
-
-	public void setStatusText(String text) {
-		statusTextView.setText(text);
-	}
-
-	public void resetStatusText() {
-		statusTextView.setText(R.string.msg_default_status);
-	}
-
-	public Handler getHandler() {
-		return handler;
 	}
 }
