@@ -34,7 +34,6 @@ public class AmazonReviewLayer implements IInfoLayer {
 		fontPaint.setColor(Color.WHITE);
 		fontPaint.setTextAlign(Align.CENTER);
 		fontPaint.setTextSize(30);
-
 	}
 
 	@Override
