@@ -6,11 +6,12 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import at.ftw.mabs.internet.helpers.EncryptionHelper;
+import at.ftw.mabs.internet.helpers.InternetHelper;
 import at.ftw.mabs.internet.helpers.TimestampHelper;
 import at.ftw.mabs.internet.helpers.UrlHelper;
 
-public class AmazonRestRequest {
-	private static AmazonRestRequest	instance			= null;
+public class AmazonAccess {
+	private static AmazonAccess	instance			= null;
 
 	// must be lower case
 	static final String					endpoint			= "ecs.amazonaws.com";
@@ -41,15 +42,15 @@ public class AmazonRestRequest {
 
 	EncryptionHelper					encryptionHelper;
 	UrlHelper							urlHelper;
-	ContentDownloader					contentDownloader;
+	InternetHelper					contentDownloader;
 
 	Map<String, String>					urlParams			= new TreeMap<String, String>();
 	byte[]								secretyKeyBytes;
 
-	private AmazonRestRequest() {
+	private AmazonAccess() {
 		encryptionHelper = EncryptionHelper.getInstance();
 		urlHelper = UrlHelper.getInstance();
-		contentDownloader = ContentDownloader.getInstance();
+		contentDownloader = InternetHelper.getInstance();
 
 		try {
 			secretyKeyBytes = awsSecretKey.getBytes(UTF8_CHARSET);
@@ -67,9 +68,9 @@ public class AmazonRestRequest {
 
 	}
 
-	public static AmazonRestRequest getInstance() {
+	public static AmazonAccess getInstance() {
 		if (instance == null) {
-			instance = new AmazonRestRequest();
+			instance = new AmazonAccess();
 		}
 
 		return instance;

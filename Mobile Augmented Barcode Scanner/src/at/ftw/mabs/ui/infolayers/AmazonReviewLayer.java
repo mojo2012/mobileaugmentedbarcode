@@ -9,11 +9,11 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.util.Log;
-import at.ftw.mabs.internet.AmazonRestRequest;
+import at.ftw.mabs.internet.AmazonAccess;
 
 public class AmazonReviewLayer implements IInfoLayer {
 	static final String	TAG	= "MABS/AmazonReviewLayer";
-	AmazonRestRequest	amazonAccess;
+	AmazonAccess	amazonAccess;
 	Paint				paint;
 	Paint				fontPaint;
 
@@ -22,7 +22,7 @@ public class AmazonReviewLayer implements IInfoLayer {
 	Bitmap				lastBarcodeBitmap;
 
 	public AmazonReviewLayer() {
-		amazonAccess = AmazonRestRequest.getInstance();
+		amazonAccess = AmazonAccess.getInstance();
 
 		paint = new Paint();
 		paint.setStyle(Style.FILL);
