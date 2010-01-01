@@ -58,7 +58,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		handler = null;
 		hasSurface = false;
 
-		showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
+		if (!connectivityHelper.isInternetAvailable())
+			showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
 	}
 
 	/**
@@ -162,12 +163,12 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				augmentedView.setBarcode(rawResult.getText());
 
 				// setStatusText("Found ISBN: " + rawResult.getText());
+
+				handler.sendEmptyMessage(R.id.restart_preview);
 			}
 		} else {
 			showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
 		}
-
-		handler.sendEmptyMessage(R.id.restart_preview);
 	}
 
 	void showInfoMessage(String text) {

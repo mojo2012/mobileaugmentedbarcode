@@ -44,7 +44,11 @@ public class ConnectivityHelper {
 		return connectivityManager.requestRouteToHost(networkType, hostAddress);
 	}
 
-	public boolean checkInternetAccessWithUrl(String url) {
+	public boolean checkInternetAccessWithUrl() {
+		return checkInternetAccessWithUrl("http://www.google.com");
+	}
+
+	boolean checkInternetAccessWithUrl(String url) {
 		boolean retVal = false;
 
 		try {

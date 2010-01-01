@@ -74,6 +74,21 @@ public class AmazonAccess {
 	}
 
 	/**
+	 * Returns the Amazon book title of a given ISBN.
+	 * 
+	 * @param isbn
+	 * @return
+	 */
+	public String getBookTitle(String isbn) {
+		String xmlResponse = internetHelper.requestUrlContent(createRequestUrl(isbn));
+		String title = "";
+
+		String tag = "";
+
+		return title;
+	}
+
+	/**
 	 * Returns the Amazon rating of a given ISBN.
 	 * 
 	 * @param isbn
@@ -85,17 +100,26 @@ public class AmazonAccess {
 
 		String tag = "AverageRating";
 
-		try {
-			int indexOfStartTag = xmlResponse.indexOf("<" + tag + ">") + tag.length() + 2;
-			int indexOfStopTag = xmlResponse.indexOf("</" + tag + ">");
+		rating = getTagContent(xmlResponse, tag);
 
-			rating = xmlResponse.substring(indexOfStartTag, indexOfStopTag);
-
-		} catch (StringIndexOutOfBoundsException ex) {
-			rating = "-1.0";
-		}
+		if (rating.equals(""))
+			rating = "-1";
 
 		return Double.parseDouble(rating);
+	}
+
+	String getTagContent(String xml, String tag) {
+		String retVal = "";
+
+		try {
+			int indexOfStartTag = xml.indexOf("<" + tag + ">") + tag.length() + 2;
+			int indexOfStopTag = xml.indexOf("</" + tag + ">");
+
+			retVal = xml.substring(indexOfStartTag, indexOfStopTag);
+		} catch (StringIndexOutOfBoundsException ex) {
+		}
+
+		return retVal;
 	}
 
 	/**
@@ -127,5 +151,4 @@ public class AmazonAccess {
 
 		return url;
 	}
-
 }

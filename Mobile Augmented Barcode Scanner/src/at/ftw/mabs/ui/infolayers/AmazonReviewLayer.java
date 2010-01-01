@@ -13,7 +13,7 @@ import at.ftw.mabs.internet.AmazonAccess;
 
 public class AmazonReviewLayer implements IInfoLayer {
 	static final String	TAG	= "MABS/AmazonReviewLayer";
-	AmazonAccess	amazonAccess;
+	AmazonAccess		amazonAccess;
 	Paint				paint;
 	Paint				fontPaint;
 
@@ -44,13 +44,12 @@ public class AmazonReviewLayer implements IInfoLayer {
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height, String isbn) {
-		if (!isbn.equals(lastBarcodeString)) {
+		if ((!isbn.equals(lastBarcodeString)) || (lastBarcodeBitmap == null)) {
+			lastBarcodeString = isbn;
 			lastRating = amazonAccess.getRating(isbn);
-
 			lastBarcodeBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 
 			Canvas canvas = new Canvas(lastBarcodeBitmap);
-
 			Rect background = new Rect(0, 0, width, height);
 			canvas.drawRect(background, paint);
 
