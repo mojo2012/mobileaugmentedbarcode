@@ -53,20 +53,19 @@ public class AugmentedView extends View {
 			if (barcodeFound) {
 				paint.setStyle(Style.FILL);
 
-				if (infoLayerBitmap == null) {
-					infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 42, frame.height() - 42);
-					Log.v(TAG, "New info layer requestet.");
-				} else {
-					Log.v(TAG, "No info layer set.");
-				}
+				infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 42, frame.height() - 42);
 
-				canvas.drawBitmap(infoLayerBitmap, frame.left + 21, frame.top + 21, paint);
+				if (infoLayerBitmap != null)
+					canvas.drawBitmap(infoLayerBitmap, frame.left + 21, frame.top + 21, paint);
+
 			} else {
-				if (infoLayerBitmap != null) {
-					Log.v(TAG, "Removing old info layer bitmap.");
+				Log.v(TAG, "No info layer set.");
+			}
+		} else {
+			if (infoLayerBitmap != null) {
+				Log.v(TAG, "Removing old info layer bitmap.");
 
-					infoLayerBitmap = null;
-				}
+				infoLayerBitmap = null;
 			}
 		}
 	}
