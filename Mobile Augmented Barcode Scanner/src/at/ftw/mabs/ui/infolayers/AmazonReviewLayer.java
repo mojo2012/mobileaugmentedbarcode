@@ -18,7 +18,8 @@ public class AmazonReviewLayer implements IInfoLayer {
 	Paint				fontPaint;
 
 	Double				lastRating;
-	String				lastBarcode;
+	String				lastBarcodeString;
+	Bitmap				lastBarcodeBitmap;
 
 	public AmazonReviewLayer() {
 		amazonAccess = AmazonRestRequest.getInstance();
@@ -38,38 +39,40 @@ public class AmazonReviewLayer implements IInfoLayer {
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height) {
-		return getInfoLayer(width, height, lastBarcode);
+		return getInfoLayer(width, height, lastBarcodeString);
 	}
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height, String isbn) {
-		lastRating = amazonAccess.getRating(isbn);
+		if (!isbn.equals(lastBarcodeString)) {
+			lastRating = amazonAccess.getRating(isbn);
 
-		Bitmap infoLayer = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+			lastBarcodeBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 
-		Canvas canvas = new Canvas(infoLayer);
+			Canvas canvas = new Canvas(lastBarcodeBitmap);
 
-		Rect background = new Rect(0, 0, width, height);
-		canvas.drawRect(background, paint);
+			Rect background = new Rect(0, 0, width, height);
+			canvas.drawRect(background, paint);
 
-		String textToDraw = "";
+			String textToDraw = "";
 
-		if (lastRating >= 0) {
-			textToDraw = "Rating: " + lastRating;
-		} else {
-			textToDraw = "ISBN not found";
+			if (lastRating >= 0) {
+				textToDraw = "Rating: " + lastRating;
+			} else {
+				textToDraw = "ISBN not found";
+			}
+
+			canvas.drawText(textToDraw, (width / 2), (height / 2), fontPaint);
+
+			Log.v(TAG, "Rating: " + lastRating);
 		}
 
-		canvas.drawText(textToDraw, (width / 2), (height / 2), fontPaint);
-
-		Log.v(TAG, "Rating: " + isbn);
-
-		return infoLayer;
+		return lastBarcodeBitmap;
 	}
 
 	@Override
 	public void setISBN(String isbn) {
-		lastBarcode = isbn;
+		lastBarcodeString = isbn;
 	}
 
 }
