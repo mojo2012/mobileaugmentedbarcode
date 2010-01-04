@@ -15,8 +15,8 @@ import android.util.Log;
 import at.ftw.mabs.R;
 import at.ftw.mabs.internet.AmazonAccess;
 
-public class AmazonReviewLayer implements IInfoLayer {
-	static final String	TAG	= "MABS/AmazonReviewLayer";
+public class AmazonRatingLayer implements IInfoLayer {
+	static final String	TAG	= "MABS/AmazonRatingLayer";
 	AmazonAccess		amazonAccess;
 	Paint				paint;
 	Paint				fontPaint;
@@ -25,7 +25,7 @@ public class AmazonReviewLayer implements IInfoLayer {
 	String				lastBarcodeString;
 	Bitmap				lastBarcodeBitmap;
 
-	public AmazonReviewLayer() {
+	public AmazonRatingLayer() {
 		amazonAccess = AmazonAccess.getInstance();
 
 		paint = new Paint();

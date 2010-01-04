@@ -36,7 +36,7 @@ import com.google.zxing.result.Result;
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class ActivityHandler extends Handler {
-	private static final String				TAG	= "MABS/CaptureActivityHandler";
+	private static final String				TAG	= "MABS/ActivityHandler";
 
 	private final AugmentedRealityActivity	activity;
 	private final DecodeThread				decodeThread;
@@ -48,10 +48,10 @@ public final class ActivityHandler extends Handler {
 		DONE
 	}
 
-	public ActivityHandler(AugmentedRealityActivity captureActivity, boolean beginScanning) {
-		this.activity = captureActivity;
+	public ActivityHandler(AugmentedRealityActivity augmentedViewActivity, boolean beginScanning) {
+		this.activity = augmentedViewActivity;
 
-		decodeThread = new DecodeThread(captureActivity);
+		decodeThread = new DecodeThread(augmentedViewActivity);
 		decodeThread.start();
 		state = State.SUCCESS;
 
@@ -120,7 +120,6 @@ public final class ActivityHandler extends Handler {
 			state = State.PREVIEW;
 			CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
 			CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
-			// activity.drawViewfinder();
 		}
 	}
 }
