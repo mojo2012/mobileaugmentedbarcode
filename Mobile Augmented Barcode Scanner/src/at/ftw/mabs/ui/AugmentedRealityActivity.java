@@ -26,7 +26,7 @@ import com.google.zxing.result.Result;
 
 /**
  * The barcode reader activity itself. This is loosely based on the
- * CameraPreview example included in the Android SDK.
+ * CaptureActivity of the ZXing example code.
  * 
  * @author meister.fuchs@gmail.com (Matthias Fuchs)
  */
