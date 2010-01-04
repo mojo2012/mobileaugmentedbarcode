@@ -1,3 +1,5 @@
+//Author: Matthias Fuchs (meister.fuchs@gmail.com
+
 package at.ftw.mabs.ui.views;
 
 import java.util.Timer;

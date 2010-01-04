@@ -1,3 +1,5 @@
+//Author: Matthias Fuchs (meister.fuchs@gmail.com
+
 package at.ftw.mabs.internet;
 
 import java.io.UnsupportedEncodingException;

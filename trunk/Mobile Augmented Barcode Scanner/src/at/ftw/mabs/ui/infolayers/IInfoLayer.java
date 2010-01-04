@@ -1,3 +1,5 @@
+//Author: Matthias Fuchs (meister.fuchs@gmail.com
+
 package at.ftw.mabs.ui.infolayers;
 
 import android.graphics.Bitmap;

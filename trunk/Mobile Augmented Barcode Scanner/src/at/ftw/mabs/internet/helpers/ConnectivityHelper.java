@@ -1,3 +1,5 @@
+//Author: Matthias Fuchs (meister.fuchs@gmail.com
+
 package at.ftw.mabs.internet.helpers;
 
 import java.io.IOException;
