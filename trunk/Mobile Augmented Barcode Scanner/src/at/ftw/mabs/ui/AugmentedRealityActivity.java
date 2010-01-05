@@ -41,7 +41,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	SurfaceView			cameraView;
 	TextView			statusTextView;
 
-	SurfaceHolder		holder;
 	ConnectivityHelper	connectivityHelper;
 
 	boolean				hasSurface;
@@ -88,26 +87,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		statusTextView = (TextView) findViewById(R.id.status_text_view);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-		SurfaceHolder surfaceHolder = surfaceView.getHolder();
-
-		if (hasSurface) {
-			// The activity was paused but not stopped, so the surface still
-			// exists. Therefore
-			// surfaceCreated() won't be called, so init the camera here.
-			initCamera(surfaceHolder);
-		} else {
-			// Install the callback and wait for surfaceCreated() to init the
-			// camera.
-			surfaceHolder.addCallback(this);
-			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		}
-	}
-
 	/**
 	 * Initialize the camera and install the surface holder callback.
 	 * 
@@ -124,28 +103,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		if (handler == null) {
 			handler = new ActivityHandler(this, true);
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		if (handler != null) {
-			handler.quitSynchronously();
-			handler = null;
-		}
-
-		CameraManager.get().closeDriver();
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
-			// Handle these events so they don't launch the Camera app
-			return true;
-		}
-
-		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
@@ -187,6 +144,48 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	public Handler getHandler() {
 		return handler;
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		if (handler != null) {
+			handler.quitSynchronously();
+			handler = null;
+		}
+
+		CameraManager.get().closeDriver();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+		SurfaceHolder surfaceHolder = surfaceView.getHolder();
+
+		if (hasSurface) {
+			// The activity was paused but not stopped, so the surface still
+			// exists. Therefore
+			// surfaceCreated() won't be called, so init the camera here.
+			initCamera(surfaceHolder);
+		} else {
+			// Install the callback and wait for surfaceCreated() to init the
+			// camera.
+			surfaceHolder.addCallback(this);
+			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
+			// Handle these events so they don't launch the Camera app
+			return true;
+		}
+
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
