@@ -89,6 +89,7 @@ public class AmazonRatingLayer implements IInfoLayer {
 	@Override
 	public void setISBN(String isbn) {
 		lastBarcodeString = isbn;
+		lastBarcodeBitmap = null;
 	}
 
 }
