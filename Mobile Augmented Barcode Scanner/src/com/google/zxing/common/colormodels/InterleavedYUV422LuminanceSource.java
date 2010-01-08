@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package at.ftw.mabs.camera.colormodels;
+package com.google.zxing.common.colormodels;
 
 import android.graphics.Bitmap;
 

@@ -26,7 +26,6 @@ import android.os.Message;
 import android.util.Log;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
-import at.ftw.mabs.camera.colormodels.BaseLuminanceSource;
 import at.ftw.mabs.ui.AugmentedRealityActivity;
 
 import com.google.zxing.common.BarcodeFormat;
@@ -34,6 +33,7 @@ import com.google.zxing.common.BinaryBitmap;
 import com.google.zxing.common.DecodeHintType;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.ReaderException;
+import com.google.zxing.common.colormodels.BaseLuminanceSource;
 import com.google.zxing.reader.EAN13Reader;
 import com.google.zxing.result.Result;
 
