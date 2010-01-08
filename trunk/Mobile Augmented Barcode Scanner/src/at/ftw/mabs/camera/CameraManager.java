@@ -30,10 +30,10 @@ import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
-import at.ftw.mabs.camera.colormodels.BaseLuminanceSource;
-import at.ftw.mabs.camera.colormodels.InterleavedYUV422LuminanceSource;
-import at.ftw.mabs.camera.colormodels.PlanarYUVLuminanceSource;
 
+import com.google.zxing.common.colormodels.BaseLuminanceSource;
+import com.google.zxing.common.colormodels.InterleavedYUV422LuminanceSource;
+import com.google.zxing.common.colormodels.PlanarYUVLuminanceSource;
 import com.google.zxing.result.ResultPoint;
 
 public class CameraManager {
