@@ -43,7 +43,11 @@ public class AmazonRatingLayer implements IInfoLayer {
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height) {
-		return getInfoLayer(width, height, lastBarcodeString);
+		if (lastBarcodeBitmap == null)
+			return getInfoLayer(width, height, lastBarcodeString);
+		else
+			return lastBarcodeBitmap;
+
 	}
 
 	@Override
