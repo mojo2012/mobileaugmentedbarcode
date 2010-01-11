@@ -19,7 +19,6 @@ package at.ftw.mabs.scanner;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -93,18 +92,16 @@ public final class ActivityHandler extends Handler {
 				activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
 				activity.finish();
 				break;
-			case R.id.launch_product_query:
-				String url = (String) message.obj;
-				activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-				break;
 		}
 	}
 
 	public void quitSynchronously() {
 		state = State.DONE;
+
 		CameraManager.get().stopPreview();
 		Message quit = Message.obtain(decodeThread.getHandler(), R.id.quit);
 		quit.sendToTarget();
+
 		try {
 			decodeThread.join();
 		} catch (InterruptedException e) {
@@ -118,6 +115,7 @@ public final class ActivityHandler extends Handler {
 	private void restartPreviewAndDecode() {
 		if (state == State.SUCCESS) {
 			state = State.PREVIEW;
+
 			CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
 			CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
 		}
