@@ -99,7 +99,7 @@ public class AugmentedView extends View {
 			resetTimer.cancel();
 
 		resetTimer = new Timer();
-		resetTimer.schedule(new BarcodeResetTimer(this), 5000);
+		resetTimer.schedule(new BarcodeResetTimerTask(this), 5000);
 
 		invalidate();
 	}
@@ -116,10 +116,10 @@ public class AugmentedView extends View {
 	/**
 	 * Timer that resets the info layer.
 	 */
-	class BarcodeResetTimer extends TimerTask {
+	class BarcodeResetTimerTask extends TimerTask {
 		AugmentedView	view;
 
-		public BarcodeResetTimer(AugmentedView view) {
+		public BarcodeResetTimerTask(AugmentedView view) {
 			this.view = view;
 		}
 
