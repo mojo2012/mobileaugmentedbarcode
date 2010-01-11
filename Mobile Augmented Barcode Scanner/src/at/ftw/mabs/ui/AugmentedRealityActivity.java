@@ -60,7 +60,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		hasSurface = false;
 
 		if (!connectivityHelper.isInternetAvailable())
-			showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
+			showInfoMessage("No internet connection available!\nNo ratings will be displayed");
 	}
 
 	/**
@@ -126,7 +126,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				handler.sendEmptyMessage(R.id.restart_preview);
 			}
 		} else {
-			showInfoMessage("Not internet connection available!\nNo ratings will be displayed");
+			showInfoMessage("No internet connection available!\nNo ratings will be displayed");
 		}
 	}
 
