@@ -125,6 +125,7 @@ final class DecodeThread extends Thread {
 
 		if (success) {
 			Log.v(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
+
 			Message message = Message.obtain(activity.getHandler(), R.id.decode_succeeded, rawResult);
 			Bundle bundle = new Bundle();
 			bundle.putParcelable(BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
