@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.ui.infolayers.IInfoLayer;
+
+import com.google.zxing.result.Result;
 
 public class AugmentedView extends View {
 	static final String	TAG				= "MABS/AugmentedView";
@@ -31,6 +34,8 @@ public class AugmentedView extends View {
 	Bitmap				infoLayerBitmap	= null;
 
 	boolean				barcodeFound	= false;
+
+	Point[]				resultPoints;
 
 	// This constructor is used when the class is built from an XML resource.
 	public AugmentedView(Context context, AttributeSet attrs) {
@@ -84,6 +89,31 @@ public class AugmentedView extends View {
 		canvas.drawRect(innerBox, paint);
 	}
 
+	void drawResultPoints(Canvas canvas) {
+		if (resultPoints != null) {
+			if (resultPoints.length == 2) {
+				paint.setStrokeWidth(4.0f);
+				paint.setColor(Color.DKGRAY);
+
+				canvas.drawLine(resultPoints[0].x, resultPoints[0].y,
+						resultPoints[1].x,
+						resultPoints[0].y, paint);
+
+				canvas.drawLine(resultPoints[1].x, resultPoints[0].y,
+						resultPoints[1].x,
+						resultPoints[1].y, paint);
+
+				canvas.drawLine(resultPoints[0].x, resultPoints[0].y,
+						resultPoints[0].x,
+						resultPoints[1].y, paint);
+
+				canvas.drawLine(resultPoints[0].x, resultPoints[1].y,
+						resultPoints[1].x,
+						resultPoints[1].y, paint);
+			}
+		}
+	}
+
 	/**
 	 * Augment the screen with the downloaded information about the barcode.
 	 * 
@@ -91,6 +121,7 @@ public class AugmentedView extends View {
 	 *            An image of the decoded barcode.
 	 */
 	public void setBarcode(String isbn) {
+		resultPoints = null;
 		infoLayer.setISBN(isbn);
 
 		barcodeFound = true;
@@ -102,6 +133,44 @@ public class AugmentedView extends View {
 		resetTimer.schedule(new BarcodeResetTimerTask(this), 5000);
 
 		invalidate();
+	}
+
+	/**
+	 * Augment the screen with the downloaded information about the barcode.
+	 * Draws the overlay to the given result points.
+	 * 
+	 * @param barcode
+	 *            An image of the decoded barcode.
+	 */
+	public void setBarcode(Result result) {
+		setBarcode(result.getText());
+
+		resultPoints = CameraManager.get().convertResultPoints(result.getResultPoints());
+
+		invalidate();
+	}
+
+	/**
+	 * Create rectangle coordinates surrounding the barcode on the screen.
+	 * 
+	 * @param rawScreenPoints
+	 * @return
+	 */
+	Point[] getRectangularResultPoints(Point[] rawScreenPoints) {
+		Point[] points = new Point[2];
+
+		int distance = rawScreenPoints[1].x - rawScreenPoints[0].x;
+		int height = (int) (distance / 2.1f);
+
+		Rect frame = CameraManager.get().getFramingRect();
+
+		int top = frame.centerY() - (height / 2);
+		int bottom = top + height;
+
+		points[0] = new Point(rawScreenPoints[0].x, top);
+		points[1] = new Point(rawScreenPoints[1].x, bottom);
+
+		return points;
 	}
 
 	/**
