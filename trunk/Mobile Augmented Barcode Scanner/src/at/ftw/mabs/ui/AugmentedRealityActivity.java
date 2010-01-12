@@ -26,6 +26,8 @@ import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.internet.helpers.ConnectivityHelper;
 import at.ftw.mabs.scanner.ActivityHandler;
 import at.ftw.mabs.ui.infolayers.AmazonBookPriceLayer;
+import at.ftw.mabs.ui.infolayers.AmazonRatingLayer;
+import at.ftw.mabs.ui.infolayers.IInfoLayer;
 import at.ftw.mabs.ui.views.AugmentedView;
 
 import com.google.zxing.result.Result;
@@ -37,7 +39,7 @@ import com.google.zxing.result.Result;
  * @author meister.fuchs@gmail.com (Matthias Fuchs)
  */
 public final class AugmentedRealityActivity extends Activity implements SurfaceHolder.Callback {
-	static final String			TAG				= "MABS/AugmentedRealityActivity";
+	static final String			TAG					= "MABS/AugmentedRealityActivity";
 
 	ActivityHandler				handler;
 
@@ -47,12 +49,18 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	ConnectivityHelper			connectivityHelper;
 
-	SharedPreferences			settings		= null;
-	SharedPreferences.Editor	settingsEditor	= null;
+	SharedPreferences			settings			= null;
+	SharedPreferences.Editor	settingsEditor		= null;
 
 	boolean						showFocusRect;
+	String						infoLayerClassName	= "";
 
-	boolean						hasSurface;
+	enum infoLayers {
+		ratingLayer,
+		bookPriceLayer
+	}
+
+	boolean	hasSurface;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -90,10 +98,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		setContentView(R.layout.augmented_view);
 
 		cameraView = (SurfaceView) findViewById(R.id.preview_view);
-
 		augmentedView = (AugmentedView) findViewById(R.id.augmented_view);
-		augmentedView.setInfoLayer(new AmazonBookPriceLayer());
-
 		statusTextView = (TextView) findViewById(R.id.status_text_view);
 	}
 
@@ -120,12 +125,29 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		settingsEditor = settings.edit();
 
 		showFocusRect = settings.getBoolean("focus_rect_visibility", false);
-
 		augmentedView.setFocusRectVisiblity(showFocusRect);
+
+		infoLayerClassName = settings.getString("infolayer_class_name", "AmazonRatingLayer");
+		augmentedView.setInfoLayer(getInfoLayer(infoLayerClassName));
+	}
+
+	IInfoLayer getInfoLayer(String className) {
+		IInfoLayer infoLayer;
+
+		if (className.equals("AmazonRatingLayer")) {
+			infoLayer = new AmazonRatingLayer();
+		} else if (className.equals("AmazonBookPriceLayer")) {
+			infoLayer = new AmazonBookPriceLayer();
+		} else {
+			infoLayer = null;
+		}
+
+		return infoLayer;
 	}
 
 	void saveSettings() {
 		settingsEditor.putBoolean("focus_rect_visibility", showFocusRect);
+		settingsEditor.putString("infolayer_class_name", infoLayerClassName);
 
 		settingsEditor.commit();
 	}
@@ -217,7 +239,21 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.select_info_layer:
+			case R.id.review_info_layer:
+				item.setChecked(true);
+				infoLayerClassName = "AmazonRatingLayer";
+
+				augmentedView.setInfoLayer(getInfoLayer(infoLayerClassName));
+
+				saveSettings();
+
+				break;
+			case R.id.price_info_layer:
+				infoLayerClassName = "AmazonBookPriceLayer";
+
+				augmentedView.setInfoLayer(getInfoLayer(infoLayerClassName));
+
+				saveSettings();
 
 				break;
 			case R.id.toggle_focus_rect:
