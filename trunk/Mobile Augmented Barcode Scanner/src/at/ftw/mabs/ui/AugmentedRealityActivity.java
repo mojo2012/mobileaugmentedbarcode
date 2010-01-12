@@ -25,7 +25,7 @@ import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.internet.helpers.ConnectivityHelper;
 import at.ftw.mabs.scanner.ActivityHandler;
-import at.ftw.mabs.ui.infolayers.AmazonRatingLayer;
+import at.ftw.mabs.ui.infolayers.AmazonBookPriceLayer;
 import at.ftw.mabs.ui.views.AugmentedView;
 
 import com.google.zxing.result.Result;
@@ -92,7 +92,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		cameraView = (SurfaceView) findViewById(R.id.preview_view);
 
 		augmentedView = (AugmentedView) findViewById(R.id.augmented_view);
-		augmentedView.setInfoLayer(new AmazonRatingLayer());
+		augmentedView.setInfoLayer(new AmazonBookPriceLayer());
 
 		statusTextView = (TextView) findViewById(R.id.status_text_view);
 	}
