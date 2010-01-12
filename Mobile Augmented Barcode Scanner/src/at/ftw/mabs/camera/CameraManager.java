@@ -260,20 +260,26 @@ public class CameraManager {
 			if (camera == null) {
 				return null;
 			}
-			int width = cameraResolution.x * 3 / 4;
-			if (width < MIN_FRAME_WIDTH) {
-				width = MIN_FRAME_WIDTH;
-			} else if (width > MAX_FRAME_WIDTH) {
-				width = MAX_FRAME_WIDTH;
-			}
-			int height = cameraResolution.y * 3 / 4;
-			if (height < MIN_FRAME_HEIGHT) {
-				height = MIN_FRAME_HEIGHT;
-			} else if (height > MAX_FRAME_HEIGHT) {
-				height = MAX_FRAME_HEIGHT;
-			}
-			int leftOffset = (cameraResolution.x - width) / 2;
-			int topOffset = (cameraResolution.y - height) / 2;
+
+			int width = cameraResolution.x; // * 3 / 4;
+
+			// if (width < MIN_FRAME_WIDTH) {
+			// width = MIN_FRAME_WIDTH;
+			// } else if (width > MAX_FRAME_WIDTH) {
+			// width = MAX_FRAME_WIDTH;
+			// }
+			//
+			int height = cameraResolution.y; // * 3 / 4;
+			//
+			// if (height < MIN_FRAME_HEIGHT) {
+			// height = MIN_FRAME_HEIGHT;
+			// } else if (height > MAX_FRAME_HEIGHT) {
+			// height = MAX_FRAME_HEIGHT;
+			// }
+
+			int leftOffset = 0; // (cameraResolution.x - width) / 2;
+			int topOffset = 0; // (cameraResolution.y - height) / 2;
+
 			framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
 			Log.v(TAG, "Calculated framing rect: " + framingRect);
 		}
@@ -294,6 +300,7 @@ public class CameraManager {
 		Rect frame = getFramingRect();
 		int count = points.length;
 		Point[] output = new Point[count];
+
 		for (int x = 0; x < count; x++) {
 			output[x] = new Point();
 			output[x].x = frame.left + (int) (points[x].getX() + 0.5f);

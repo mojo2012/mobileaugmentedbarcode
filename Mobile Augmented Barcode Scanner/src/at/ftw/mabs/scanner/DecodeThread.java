@@ -87,9 +87,7 @@ final class DecodeThread extends Thread {
 	 */
 	private void setDecode1DMode() {
 		Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(3);
-		Vector<BarcodeFormat> vector = new Vector<BarcodeFormat>(7);
-		vector.addElement(BarcodeFormat.UPC_A);
-		vector.addElement(BarcodeFormat.UPC_E);
+		Vector<BarcodeFormat> vector = new Vector<BarcodeFormat>(3);
 		vector.addElement(BarcodeFormat.EAN_13);
 		hints.put(DecodeHintType.POSSIBLE_FORMATS, vector);
 	}

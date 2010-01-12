@@ -20,6 +20,7 @@ import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.ui.infolayers.IInfoLayer;
 
 import com.google.zxing.result.Result;
+import com.google.zxing.result.ResultPoint;
 
 public class AugmentedView extends View {
 	static final String	TAG				= "MABS/AugmentedView";
@@ -44,9 +45,9 @@ public class AugmentedView extends View {
 		super(context, attrs);
 
 		paint = new Paint();
-
 		paint.setStrokeWidth(2.0f);
 		paint.setAlpha(100);
+		paint.setColor(Color.WHITE);
 
 		outerBox = new Rect();
 		innerBox = new Rect();
@@ -63,14 +64,24 @@ public class AugmentedView extends View {
 			if (barcodeFound) {
 				paint.setStyle(Style.FILL);
 
+				int x;
+				int y;
+
 				if (resultPoints == null) {
-					infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 42, frame.height() - 42);
+					infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 122, frame.height() - 122);
+
+					x = frame.left + 61;
+					y = frame.top + 61;
 				} else {
-					drawResultPoints(canvas);
+					infoLayerBitmap = infoLayer.getInfoLayer(resultPoints[1].x - resultPoints[0].x,
+							resultPoints[1].y - resultPoints[0].y);
+
+					x = resultPoints[0].x;
+					y = resultPoints[0].y;
 				}
 
 				if (infoLayerBitmap != null)
-					canvas.drawBitmap(infoLayerBitmap, frame.left + 21, frame.top + 21, paint);
+					canvas.drawBitmap(infoLayerBitmap, x, y, paint);
 
 			} else {
 				Log.v(TAG, "No info layer set.");
@@ -88,11 +99,11 @@ public class AugmentedView extends View {
 		paint.setStyle(Style.STROKE);
 
 		paint.setColor(Color.BLACK);
-		outerBox.set(frame.left + 19, frame.top + 19, frame.right - 19, frame.bottom - 19);
+		outerBox.set(frame.left + 59, frame.top + 59, frame.right - 59, frame.bottom - 59);
 		canvas.drawRect(outerBox, paint);
 
 		paint.setColor(Color.WHITE);
-		innerBox.set(frame.left + 21, frame.top + 21, frame.right - 21, frame.bottom - 21);
+		innerBox.set(frame.left + 61, frame.top + 61, frame.right - 61, frame.bottom - 61);
 		canvas.drawRect(innerBox, paint);
 	}
 
@@ -152,7 +163,7 @@ public class AugmentedView extends View {
 	public void setBarcode(Result result) {
 		setBarcode(result.getText());
 
-		resultPoints = getRectangularResultPoints(CameraManager.get().convertResultPoints(result.getResultPoints()));
+		resultPoints = getRectangularResultPoints(result.getResultPoints());
 
 		invalidate();
 	}
@@ -163,19 +174,17 @@ public class AugmentedView extends View {
 	 * @param rawScreenPoints
 	 * @return
 	 */
-	Point[] getRectangularResultPoints(Point[] rawScreenPoints) {
+	Point[] getRectangularResultPoints(ResultPoint[] rawScreenPoints) {
 		Point[] points = new Point[2];
 
-		int distance = rawScreenPoints[1].x - rawScreenPoints[0].x;
-		int height = (int) (distance / 2.1f);
+		int distance = (int) (rawScreenPoints[1].getX() - rawScreenPoints[0].getX());
+		int height = (int) (distance / 1.9f);
 
-		Rect frame = CameraManager.get().getFramingRect();
-
-		int top = frame.centerY() - (height / 2);
+		int top = (int) (rawScreenPoints[0].getY() - (height / 2));
 		int bottom = top + height;
 
-		points[0] = new Point(rawScreenPoints[0].x, top);
-		points[1] = new Point(rawScreenPoints[1].x, bottom);
+		points[0] = new Point((int) rawScreenPoints[0].getX() - 10, top);
+		points[1] = new Point((int) rawScreenPoints[1].getX() + 10, bottom);
 
 		return points;
 	}
