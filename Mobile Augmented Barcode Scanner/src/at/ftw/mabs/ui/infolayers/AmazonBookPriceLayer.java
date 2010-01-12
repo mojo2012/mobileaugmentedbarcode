@@ -73,7 +73,7 @@ public class AmazonBookPriceLayer implements IInfoLayer {
 			String textToDraw = "";
 
 			if (!lastPrice.equals("")) {
-				textToDraw = "lastPrice";
+				textToDraw = lastPrice;
 			} else {
 				textToDraw = "ISBN not found";
 			}
