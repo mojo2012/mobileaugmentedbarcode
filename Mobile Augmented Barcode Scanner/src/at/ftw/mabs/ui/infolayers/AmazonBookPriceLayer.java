@@ -3,7 +3,6 @@
 package at.ftw.mabs.ui.infolayers;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,7 +11,6 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.util.Log;
-import at.ftw.mabs.R;
 import at.ftw.mabs.internet.AmazonAccess;
 
 public class AmazonBookPriceLayer implements IInfoLayer {
@@ -32,7 +30,7 @@ public class AmazonBookPriceLayer implements IInfoLayer {
 
 		paint = new Paint();
 		paint.setStyle(Style.FILL);
-		paint.setColor(Color.DKGRAY);
+		paint.setColor(Color.YELLOW);
 		paint.setAlpha(100);
 		paint.setTextSize(12);
 
@@ -85,14 +83,6 @@ public class AmazonBookPriceLayer implements IInfoLayer {
 		}
 
 		return lastBarcodeBitmap;
-	}
-
-	Bitmap generateRatingStars(double rating) {
-		Bitmap starFull = BitmapFactory.decodeResource(null, R.drawable.star_full);
-
-		Bitmap ratingStars = Bitmap.createBitmap(24 * 5, 24, Config.ARGB_8888);
-
-		return ratingStars;
 	}
 
 	@Override
