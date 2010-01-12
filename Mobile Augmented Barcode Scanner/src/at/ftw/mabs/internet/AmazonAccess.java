@@ -65,7 +65,6 @@ public class AmazonAccess {
 		urlParams.put(OPERATION_KEY, OPERATION);
 		urlParams.put(SEARCH_INDEX_KEY, SEARCH_INDEX);
 		urlParams.put(SERVICE_KEY, SERVICE);
-
 	}
 
 	public static AmazonAccess getInstance() {
