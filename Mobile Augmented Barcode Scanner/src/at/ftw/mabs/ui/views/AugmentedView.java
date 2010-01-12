@@ -37,6 +37,8 @@ public class AugmentedView extends View {
 
 	Point[]				resultPoints;
 
+	boolean				showFocusRect	= true;
+
 	// This constructor is used when the class is built from an XML resource.
 	public AugmentedView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -55,7 +57,8 @@ public class AugmentedView extends View {
 		Rect frame = CameraManager.get().getFramingRect();
 
 		if (frame != null) {
-			drawViewfinderBorder(canvas, frame);
+			if (showFocusRect)
+				drawFocusRect(canvas, frame);
 
 			if (barcodeFound) {
 				paint.setStyle(Style.FILL);
@@ -77,7 +80,7 @@ public class AugmentedView extends View {
 		}
 	}
 
-	void drawViewfinderBorder(Canvas canvas, Rect frame) {
+	void drawFocusRect(Canvas canvas, Rect frame) {
 		paint.setStyle(Style.STROKE);
 
 		paint.setColor(Color.BLACK);
@@ -180,6 +183,11 @@ public class AugmentedView extends View {
 	 */
 	public void setInfoLayer(IInfoLayer infoLayer) {
 		this.infoLayer = infoLayer;
+	}
+
+	public void setFocusRectVisiblity(boolean showFocusRect) {
+		this.showFocusRect = showFocusRect;
+		invalidate();
 	}
 
 	/**

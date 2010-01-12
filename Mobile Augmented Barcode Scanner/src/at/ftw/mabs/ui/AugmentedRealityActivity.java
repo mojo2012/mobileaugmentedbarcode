@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
@@ -186,6 +187,20 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		inflater.inflate(R.menu.main_menu, menu);
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.select_info_layer:
+
+				break;
+			case R.id.toggle_focus_rect:
+				augmentedView.setFocusRectVisiblity(false);
+
+				break;
+		}
+		return true;
 	}
 
 	@Override
