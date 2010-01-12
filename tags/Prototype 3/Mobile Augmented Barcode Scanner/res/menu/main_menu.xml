@@ -1,0 +1,29 @@
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/select_info_layer"
+		android:icon="@drawable/ic_info_layer"
+		android:title="Select info layer">
+
+		<menu>
+			<group
+				android:id="@+id/infolayer_group">
+				<item
+					android:id="@+id/review_info_layer"
+					android:title="Amazon Book Rating Layer">
+				</item>
+
+				<item
+					android:id="@+id/price_info_layer"
+					android:title="Amazon Book Price Layer">
+				</item>
+			</group>
+		</menu>
+	</item>
+
+	<item
+		android:id="@+id/toggle_focus_rect"
+		android:icon="@drawable/ic_menu_crop"
+		android:title="Toggle focus rectangle visibility">
+	</item>
+</menu>
