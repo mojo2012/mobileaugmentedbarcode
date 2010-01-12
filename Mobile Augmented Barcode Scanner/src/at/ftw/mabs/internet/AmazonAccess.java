@@ -34,7 +34,7 @@ public class AmazonAccess {
 	static final String			RESPONSE_GROUP_KEY		= "ResponseGroup";
 	static final String			RESPONSE_GROUP_REVIEWS	= "Reviews";
 	static final String			RESPONSE_GROUP_PRICE	= "OfferSummary";
-	static final String			RESPONSE_GROUP_NAME		= "Medium,OfferFull";
+	static final String			RESPONSE_GROUP_NAME		= "Medium";
 	static final String			SEARCH_INDEX_KEY		= "SearchIndex";
 	static final String			SEARCH_INDEX			= "Books";
 	static final String			SERVICE_KEY				= "Service";
