@@ -28,17 +28,14 @@ public class AugmentedView extends View {
 	final Paint			paint;
 	private final Rect	outerBox;
 	private final Rect	innerBox;
+	boolean				showFocusRect	= false;
 
 	Timer				resetTimer;
 
 	IInfoLayer			infoLayer;
 	Bitmap				infoLayerBitmap	= null;
-
 	boolean				barcodeFound	= false;
-
 	Point[]				resultPoints;
-
-	boolean				showFocusRect	= false;
 
 	// This constructor is used when the class is built from an XML resource.
 	public AugmentedView(Context context, AttributeSet attrs) {
@@ -80,9 +77,10 @@ public class AugmentedView extends View {
 					y = resultPoints[0].y;
 				}
 
-				if (infoLayerBitmap != null)
+				if (infoLayerBitmap != null) {
 					canvas.drawBitmap(infoLayerBitmap, x, y, paint);
-
+					startTimer(5);
+				}
 			} else {
 				Log.v(TAG, "No info layer set.");
 			}
@@ -132,25 +130,12 @@ public class AugmentedView extends View {
 		}
 	}
 
-	/**
-	 * Augment the screen with the downloaded information about the barcode.
-	 * 
-	 * @param barcode
-	 *            An image of the decoded barcode.
-	 */
-	public void setBarcode(String isbn) {
-		resultPoints = null;
-		infoLayer.setISBN(isbn);
-
-		barcodeFound = true;
-
+	void startTimer(int seconds) {
 		if (resetTimer != null)
 			resetTimer.cancel();
 
 		resetTimer = new Timer();
-		resetTimer.schedule(new BarcodeResetTimerTask(this), 5000);
-
-		invalidate();
+		resetTimer.schedule(new BarcodeResetTimerTask(this), seconds * 1000);
 	}
 
 	/**
@@ -160,10 +145,16 @@ public class AugmentedView extends View {
 	 * @param barcode
 	 *            An image of the decoded barcode.
 	 */
-	public void setBarcode(Result result) {
-		setBarcode(result.getText());
+	public void setBarcode(Result result, boolean trackBarcode) {
+		resultPoints = null;
 
-		resultPoints = getRectangularResultPoints(result.getResultPoints());
+		if (trackBarcode) {
+			resultPoints = getRectangularResultPoints(result.getResultPoints());
+		}
+
+		infoLayer.setISBN(result.getText());
+
+		barcodeFound = true;
 
 		invalidate();
 	}

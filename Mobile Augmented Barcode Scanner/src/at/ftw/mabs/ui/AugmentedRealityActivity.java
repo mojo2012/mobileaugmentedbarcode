@@ -145,7 +145,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		if (connectivityHelper.isInternetAvailable()) {
 			if (rawResult != null) {
 				// augmentedView.setBarcode(rawResult.getText());
-				augmentedView.setBarcode(rawResult);
+				augmentedView.setBarcode(rawResult, true);
 
 				// setStatusText("Found ISBN: " + rawResult.getText());
 
