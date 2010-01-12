@@ -6,8 +6,11 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -47,6 +50,9 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	SurfaceView					cameraView;
 	TextView					statusTextView;
 
+	private MediaPlayer			mediaPlayer;
+	private static final float	BEEP_VOLUME			= 0.10f;
+
 	ConnectivityHelper			connectivityHelper;
 
 	SharedPreferences			settings			= null;
@@ -54,6 +60,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	boolean						showFocusRect;
 	String						infoLayerClassName	= "";
+
+	String						lastBarcode			= "";
 
 	enum infoLayers {
 		ratingLayer,
@@ -70,6 +78,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		loadViews();
 		loadSettings();
+		initBeepSound();
 
 		CameraManager.init(getApplication());
 		connectivityHelper = ConnectivityHelper.getInstance(this);
@@ -153,6 +162,34 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	}
 
 	/**
+	 * Creates the beep MediaPlayer in advance so that the sound can be
+	 * triggered with the least latency possible.
+	 */
+	private void initBeepSound() {
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+		AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
+
+		try {
+			mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
+					file.getLength());
+			file.close();
+			mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
+			mediaPlayer.prepare();
+		} catch (IOException e) {
+			mediaPlayer = null;
+		}
+	}
+
+	private void playBeepSoundAndVibrate() {
+		if (mediaPlayer != null) {
+			mediaPlayer.start();
+		}
+	}
+
+	/**
 	 * A valid barcode has been found, so give an indication of success and show
 	 * the results.
 	 * 
@@ -164,12 +201,14 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	public void handleDecode(Result rawResult, Bitmap barcode) {
 		Log.v(TAG, "Barcode found: " + rawResult.getText());
 
+		if (!lastBarcode.equals(rawResult.getText())) {
+			lastBarcode = rawResult.getText();
+			playBeepSoundAndVibrate();
+		}
+
 		if (connectivityHelper.isInternetAvailable()) {
 			if (rawResult != null) {
-				// augmentedView.setBarcode(rawResult.getText());
 				augmentedView.setBarcode(rawResult, true);
-
-				// setStatusText("Found ISBN: " + rawResult.getText());
 
 				handler.sendEmptyMessage(R.id.restart_preview);
 			}
