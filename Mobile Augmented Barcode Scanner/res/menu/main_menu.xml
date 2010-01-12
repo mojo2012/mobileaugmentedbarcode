@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/select_info_layer"
+		android:icon="@drawable/ic_menu_infolayer"
+		android:title="Select info layer">
+	</item>
+	
+	<item
+		android:id="@+id/toggle_focus_rectangle_visibility"
+		android:icon="@drawable/ic_menu_focus_rect"
+		android:title="Show/hide focus rectangle">
+	</item>
+</menu>
