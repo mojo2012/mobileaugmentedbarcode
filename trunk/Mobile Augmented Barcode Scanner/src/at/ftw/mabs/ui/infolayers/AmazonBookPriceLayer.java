@@ -16,13 +16,15 @@ import at.ftw.mabs.R;
 import at.ftw.mabs.internet.AmazonAccess;
 
 public class AmazonBookPriceLayer implements IInfoLayer {
-	static final String	TAG	= "MABS/AmazonRatingLayer";
+	static final String	TAG	= "MABS/AmazonBookPriceLayer";
 	AmazonAccess		amazonAccess;
 	Paint				paint;
 	Paint				fontPaint;
+	Paint				smallFontPaint;
 
-	Double				lastRating;
-	String				lastBarcodeString;
+	String				lastPrice;
+	String				lastBookTitle;
+	String				lastBarcode;
 	Bitmap				lastBarcodeBitmap;
 
 	public AmazonBookPriceLayer() {
@@ -32,51 +34,54 @@ public class AmazonBookPriceLayer implements IInfoLayer {
 		paint.setStyle(Style.FILL);
 		paint.setColor(Color.DKGRAY);
 		paint.setAlpha(100);
-		paint.setTextSize(12f);
+		paint.setTextSize(12);
 
 		fontPaint = new Paint();
 		fontPaint.setStyle(Paint.Style.FILL);
 		fontPaint.setColor(Color.WHITE);
 		fontPaint.setTextAlign(Align.CENTER);
 		fontPaint.setTextSize(30);
+
+		smallFontPaint = new Paint();
+		smallFontPaint.setStyle(Paint.Style.FILL);
+		smallFontPaint.setColor(Color.WHITE);
+		smallFontPaint.setTextAlign(Align.CENTER);
+		smallFontPaint.setTextSize(12);
 	}
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height) {
 		if (lastBarcodeBitmap == null)
-			return getInfoLayer(width, height, lastBarcodeString);
+			return getInfoLayer(width, height, lastBarcode);
 		else
 			return lastBarcodeBitmap;
-
 	}
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height, String isbn) {
-		if ((!isbn.equals(lastBarcodeString)) || (lastBarcodeBitmap == null)) {
-			lastBarcodeString = isbn;
-			lastRating = amazonAccess.getRating(isbn);
+		if ((!isbn.equals(lastBarcode)) || (lastBarcodeBitmap == null)) {
+			lastBarcode = isbn;
+			lastPrice = amazonAccess.getPrice(isbn);
+			lastBookTitle = amazonAccess.getBookTitle(isbn);
+
 			lastBarcodeBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 
 			Canvas canvas = new Canvas(lastBarcodeBitmap);
 			Rect background = new Rect(0, 0, width, height);
 			canvas.drawRect(background, paint);
 
-			// Rect header = new Rect(0, 0, width, 20);
-			// paint.setColor(Color.BLACK);
-			// canvas.drawRect(background, paint);
-			// paint.setColor(Color.DKGRAY);
-
 			String textToDraw = "";
 
-			if (lastRating >= 0) {
-				textToDraw = "Rating: " + lastRating;
+			if (!lastPrice.equals("")) {
+				textToDraw = "lastPrice";
 			} else {
 				textToDraw = "ISBN not found";
 			}
 
+			canvas.drawText(lastBookTitle, (width / 2), 20, smallFontPaint);
 			canvas.drawText(textToDraw, (width / 2), (height / 2), fontPaint);
 
-			Log.v(TAG, "Rating: " + lastRating);
+			Log.v(TAG, "Rating: " + lastPrice);
 		}
 
 		return lastBarcodeBitmap;
@@ -92,8 +97,8 @@ public class AmazonBookPriceLayer implements IInfoLayer {
 
 	@Override
 	public void setISBN(String isbn) {
-		lastBarcodeString = isbn;
+		lastBarcode = isbn;
+		lastBookTitle = "";
 		lastBarcodeBitmap = null;
 	}
-
 }
