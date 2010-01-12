@@ -63,7 +63,11 @@ public class AugmentedView extends View {
 			if (barcodeFound) {
 				paint.setStyle(Style.FILL);
 
-				infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 42, frame.height() - 42);
+				if (resultPoints == null) {
+					infoLayerBitmap = infoLayer.getInfoLayer(frame.width() - 42, frame.height() - 42);
+				} else {
+					drawResultPoints(canvas);
+				}
 
 				if (infoLayerBitmap != null)
 					canvas.drawBitmap(infoLayerBitmap, frame.left + 21, frame.top + 21, paint);
@@ -148,7 +152,7 @@ public class AugmentedView extends View {
 	public void setBarcode(Result result) {
 		setBarcode(result.getText());
 
-		resultPoints = CameraManager.get().convertResultPoints(result.getResultPoints());
+		resultPoints = getRectangularResultPoints(CameraManager.get().convertResultPoints(result.getResultPoints()));
 
 		invalidate();
 	}
