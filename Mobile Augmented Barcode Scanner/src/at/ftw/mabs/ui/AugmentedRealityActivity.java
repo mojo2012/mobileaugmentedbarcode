@@ -5,6 +5,7 @@ package at.ftw.mabs.ui;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -36,17 +37,22 @@ import com.google.zxing.result.Result;
  * @author meister.fuchs@gmail.com (Matthias Fuchs)
  */
 public final class AugmentedRealityActivity extends Activity implements SurfaceHolder.Callback {
-	static final String	TAG	= "MABS/AugmentedRealityActivity";
+	static final String			TAG				= "MABS/AugmentedRealityActivity";
 
-	ActivityHandler		handler;
+	ActivityHandler				handler;
 
-	AugmentedView		augmentedView;
-	SurfaceView			cameraView;
-	TextView			statusTextView;
+	AugmentedView				augmentedView;
+	SurfaceView					cameraView;
+	TextView					statusTextView;
 
-	ConnectivityHelper	connectivityHelper;
+	ConnectivityHelper			connectivityHelper;
 
-	boolean				hasSurface;
+	SharedPreferences			settings		= null;
+	SharedPreferences.Editor	settingsEditor	= null;
+
+	boolean						showFocusRect;
+
+	boolean						hasSurface;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -55,6 +61,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		makeFullScreen();
 
 		loadViews();
+		loadSettings();
 
 		CameraManager.init(getApplication());
 		connectivityHelper = ConnectivityHelper.getInstance(this);
@@ -108,6 +115,21 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		}
 	}
 
+	void loadSettings() {
+		settings = getSharedPreferences("at.ftw.mabs", 0);
+		settingsEditor = settings.edit();
+
+		showFocusRect = settings.getBoolean("focus_rect_visibility", false);
+
+		augmentedView.setFocusRectVisiblity(showFocusRect);
+	}
+
+	void saveSettings() {
+		settingsEditor.putBoolean("focus_rect_visibility", showFocusRect);
+
+		settingsEditor.commit();
+	}
+
 	/**
 	 * A valid barcode has been found, so give an indication of success and show
 	 * the results.
@@ -159,6 +181,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		}
 
 		CameraManager.get().closeDriver();
+
+		// saveSettings();
 	}
 
 	@Override
@@ -196,7 +220,10 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 				break;
 			case R.id.toggle_focus_rect:
-				augmentedView.setFocusRectVisiblity(false);
+				showFocusRect = !showFocusRect;
+				augmentedView.setFocusRectVisiblity(showFocusRect);
+
+				saveSettings();
 
 				break;
 		}

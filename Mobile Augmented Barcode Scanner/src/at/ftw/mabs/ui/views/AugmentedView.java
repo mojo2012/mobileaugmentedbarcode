@@ -37,7 +37,7 @@ public class AugmentedView extends View {
 
 	Point[]				resultPoints;
 
-	boolean				showFocusRect	= true;
+	boolean				showFocusRect	= false;
 
 	// This constructor is used when the class is built from an XML resource.
 	public AugmentedView(Context context, AttributeSet attrs) {
