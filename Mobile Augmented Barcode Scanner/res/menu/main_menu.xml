@@ -9,13 +9,13 @@
 		<group android:id="@+id/infolayer_group">
 			<item
 				android:id="@+id/review_info_layer"
-				android:checkable="true"
+				android:checkable="true" 
 				android:title="Amazon Book Rating Layer">
 			</item>
 
 			<item
 				android:id="@+id/price_info_layer"
-				android:checkable="true"
+				 android:checkable="true" 
 				android:title="Amazon Book Price Layer">
 			</item>
 			</group>
