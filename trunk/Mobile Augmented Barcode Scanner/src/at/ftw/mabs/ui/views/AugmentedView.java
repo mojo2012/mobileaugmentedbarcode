@@ -2,10 +2,12 @@
 
 package at.ftw.mabs.ui.views;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,9 +15,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Paint.Style;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.ui.infolayers.IInfoLayer;
 
@@ -48,6 +53,8 @@ public class AugmentedView extends View {
 
 		outerBox = new Rect();
 		innerBox = new Rect();
+
+		initBeepSound();
 	}
 
 	@Override
@@ -60,6 +67,10 @@ public class AugmentedView extends View {
 
 			if (barcodeFound) {
 				paint.setStyle(Style.FILL);
+
+				if (infoLayerBitmap == null) {
+					playBeepSoundAndVibrate();
+				}
 
 				int x;
 				int y;
@@ -194,6 +205,36 @@ public class AugmentedView extends View {
 		invalidate();
 	}
 
+	private MediaPlayer			mediaPlayer;
+	private static final float	BEEP_VOLUME	= 0.10f;
+
+	/**
+	 * Creates the beep MediaPlayer in advance so that the sound can be
+	 * triggered with the least latency possible.
+	 */
+	private void initBeepSound() {
+		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+		AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
+
+		try {
+			mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
+					file.getLength());
+			file.close();
+			mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
+			mediaPlayer.prepare();
+		} catch (IOException e) {
+			mediaPlayer = null;
+		}
+	}
+
+	private void playBeepSoundAndVibrate() {
+		if (mediaPlayer != null) {
+			mediaPlayer.start();
+		}
+	}
+
 	/**
 	 * Timer that resets the info layer.
 	 */
@@ -207,6 +248,7 @@ public class AugmentedView extends View {
 		@Override
 		public void run() {
 			barcodeFound = false;
+			infoLayerBitmap = null;
 			resetTimer.cancel();
 			this.cancel();
 

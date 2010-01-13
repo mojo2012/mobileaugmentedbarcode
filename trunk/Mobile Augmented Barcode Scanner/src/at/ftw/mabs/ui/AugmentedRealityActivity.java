@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -78,7 +77,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		loadViews();
 		loadSettings();
-		initBeepSound();
 
 		CameraManager.init(getApplication());
 		connectivityHelper = ConnectivityHelper.getInstance(this);
@@ -138,6 +136,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		infoLayerClassName = settings.getString("infolayer_class_name", "AmazonRatingLayer");
 		augmentedView.setInfoLayer(getInfoLayer(infoLayerClassName));
+
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	}
 
 	IInfoLayer getInfoLayer(String className) {
@@ -162,34 +162,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	}
 
 	/**
-	 * Creates the beep MediaPlayer in advance so that the sound can be
-	 * triggered with the least latency possible.
-	 */
-	private void initBeepSound() {
-		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-		AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
-
-		try {
-			mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
-					file.getLength());
-			file.close();
-			mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
-			mediaPlayer.prepare();
-		} catch (IOException e) {
-			mediaPlayer = null;
-		}
-	}
-
-	private void playBeepSoundAndVibrate() {
-		if (mediaPlayer != null) {
-			mediaPlayer.start();
-		}
-	}
-
-	/**
 	 * A valid barcode has been found, so give an indication of success and show
 	 * the results.
 	 * 
@@ -203,7 +175,6 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		if (!lastBarcode.equals(rawResult.getText())) {
 			lastBarcode = rawResult.getText();
-			playBeepSoundAndVibrate();
 		}
 
 		if (connectivityHelper.isInternetAvailable()) {
