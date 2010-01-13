@@ -31,10 +31,12 @@ public class AugmentedView extends View {
 	static final String	TAG				= "MABS/AugmentedView";
 
 	final Paint			paint;
-	private final Rect	outerBox;
-	private final Rect	innerBox;
+	final Rect			outerBox;
+	final Rect			innerBox;
 	boolean				showFocusRect	= false;
 
+	MediaPlayer			mediaPlayer;
+	static final float	BEEP_VOLUME		= 0.10f;
 	Timer				resetTimer;
 
 	IInfoLayer			infoLayer;
@@ -146,7 +148,7 @@ public class AugmentedView extends View {
 			resetTimer.cancel();
 
 		resetTimer = new Timer();
-		resetTimer.schedule(new BarcodeResetTimerTask(this), seconds * 1000);
+		resetTimer.schedule(new BarcodeResetTimerTask(), seconds * 1000);
 	}
 
 	/**
@@ -205,14 +207,11 @@ public class AugmentedView extends View {
 		invalidate();
 	}
 
-	private MediaPlayer			mediaPlayer;
-	private static final float	BEEP_VOLUME	= 0.10f;
-
 	/**
 	 * Creates the beep MediaPlayer in advance so that the sound can be
 	 * triggered with the least latency possible.
 	 */
-	private void initBeepSound() {
+	void initBeepSound() {
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -229,7 +228,7 @@ public class AugmentedView extends View {
 		}
 	}
 
-	private void playBeepSoundAndVibrate() {
+	void playBeepSoundAndVibrate() {
 		if (mediaPlayer != null) {
 			mediaPlayer.start();
 		}
@@ -239,18 +238,12 @@ public class AugmentedView extends View {
 	 * Timer that resets the info layer.
 	 */
 	class BarcodeResetTimerTask extends TimerTask {
-		AugmentedView	view;
-
-		public BarcodeResetTimerTask(AugmentedView view) {
-			this.view = view;
-		}
-
 		@Override
 		public void run() {
 			barcodeFound = false;
 			infoLayerBitmap = null;
 			resetTimer.cancel();
-			this.cancel();
+			cancel();
 
 			Log.v(TAG, "Resetting augmented view.");
 
