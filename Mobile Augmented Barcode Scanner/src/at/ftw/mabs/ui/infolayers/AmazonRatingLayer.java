@@ -59,7 +59,9 @@ public class AmazonRatingLayer implements IInfoLayer {
 
 	@Override
 	public Bitmap getInfoLayer(int width, int height, String isbn) {
-		if ((!isbn.equals(lastBarcode)) || (lastBarcodeBitmap == null)) {
+		if (isbn.equals(lastBarcode) && (lastBarcodeBitmap != null)) {
+			return lastBarcodeBitmap;
+		} else {
 			lastBarcode = isbn;
 			lastRating = amazonAccess.getRating(isbn);
 			lastBookTitle = amazonAccess.getBookTitle(isbn);
