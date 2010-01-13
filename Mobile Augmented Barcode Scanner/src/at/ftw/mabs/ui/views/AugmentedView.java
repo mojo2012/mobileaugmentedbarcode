@@ -97,11 +97,11 @@ public class AugmentedView extends View {
 		paint.setStyle(Style.STROKE);
 
 		paint.setColor(Color.BLACK);
-		outerBox.set(frame.left + 59, frame.top + 59, frame.right - 59, frame.bottom - 59);
+		outerBox.set(frame.left + 79, frame.top + 79, frame.right - 79, frame.bottom - 79);
 		canvas.drawRect(outerBox, paint);
 
 		paint.setColor(Color.WHITE);
-		innerBox.set(frame.left + 61, frame.top + 61, frame.right - 61, frame.bottom - 61);
+		innerBox.set(frame.left + 81, frame.top + 81, frame.right - 81, frame.bottom - 81);
 		canvas.drawRect(innerBox, paint);
 	}
 
