@@ -244,6 +244,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		CameraManager.get().closeDriver();
 
+		lastBarcode = "";
+
 		// saveSettings();
 	}
 
