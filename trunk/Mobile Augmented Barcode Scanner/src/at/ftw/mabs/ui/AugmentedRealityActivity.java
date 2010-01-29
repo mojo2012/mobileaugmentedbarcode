@@ -186,13 +186,11 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				augmentedView.setBarcode(rawResult, true);
 
 				if (!logBarcodeDetectionStartTime.equals("")) {
-					Logger.log("Starting detection: " + logBarcodeDetectionStartTime);
-					Logger.log("Barcode found: " + rawResult.getText());
+					String logBarcodeDetectionEndTime = TimestampHelper.getInstance().timestamp("hh:mm:ss");
+					Logger.log(rawResult.getText() + "; detection" + "; " + logBarcodeDetectionStartTime
+							+ "; " + logBarcodeDetectionEndTime + "; ");
 
 					logBarcodeDetectionStartTime = "";
-				} else {
-					Logger.log("!!!!!!!!!NO START TIME SET!!!!!!!!!");
-					Logger.log("Barcode found: " + rawResult.getText());
 				}
 
 				handler.sendEmptyMessage(R.id.restart_preview);
@@ -293,7 +291,12 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				finish();
 
 				break;
+			case R.id.split_log_entry:
+				Logger.log("######################################################");
+
+				break;
 		}
+
 		return true;
 	}
 
@@ -302,6 +305,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
 			logBarcodeDetectionStartTime = TimestampHelper.getInstance().timestamp("hh:mm:ss");
+			Log.v(TAG, "DPAD_CENTER pressed");
 
 			return true;
 		} else if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
