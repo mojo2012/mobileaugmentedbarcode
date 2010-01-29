@@ -26,16 +26,16 @@
 		android:icon="@drawable/ic_menu_crop"
 		android:title="Toggle focus rectangle visibility">
 	</item>
-	
+
 	<item
 		android:id="@+id/force_quit"
 		android:icon="@drawable/ic_lock_power_off"
 		android:title="Force quit application">
 	</item>
-	
+
 	<item
 		android:id="@+id/split_log_entry"
-		android:icon="@drawable/ic_alert"
+		android:icon="@drawable/ic_triangle"
 		android:title="Log separator line">
 	</item>
 </menu>
