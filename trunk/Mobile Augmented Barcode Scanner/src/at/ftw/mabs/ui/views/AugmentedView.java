@@ -97,7 +97,7 @@ public class AugmentedView extends View {
 
 				if (!logStartInfoLayerDownload.equals("")) {
 					String logEndInfoLayerDownload = TimestampHelper.getInstance().timestamp("hh:mm:ss");
-					Logger.log(barcode + "; download; " + logStartInfoLayerDownload + "; "
+					Logger.log("download; " + barcode + "; " + logStartInfoLayerDownload + "; "
 							+ logEndInfoLayerDownload + "; ");
 
 					logStartInfoLayerDownload = "";
