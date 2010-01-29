@@ -49,6 +49,9 @@ public class AmazonAccess {
 	Map<String, String>			urlParams				= new TreeMap<String, String>();
 	byte[]						secretyKeyBytes;
 
+	String						lastISBN				= "";
+	String						lastRequest				= "";
+
 	private AmazonAccess() {
 		encryptionHelper = EncryptionHelper.getInstance();
 		internetHelper = InternetHelper.getInstance();
@@ -75,6 +78,19 @@ public class AmazonAccess {
 		return instance;
 	}
 
+	String getBookInfos(String isbn) {
+		if (!isbn.equals(lastISBN)) {
+			lastISBN = isbn;
+
+			Map<String, String> params = new TreeMap<String, String>();
+			params.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP_NAME + "," + RESPONSE_GROUP_REVIEWS);
+
+			lastRequest = internetHelper.requestUrlContent(createRequestUrl(isbn, params));
+		}
+
+		return lastRequest;
+	}
+
 	/**
 	 * Returns the Amazon book title of a given ISBN. NOT YET IMPLEMENTED
 	 * 
@@ -82,10 +98,7 @@ public class AmazonAccess {
 	 * @return
 	 */
 	public String getBookTitle(String isbn) {
-		Map<String, String> params = new TreeMap<String, String>();
-		params.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP_NAME);
-
-		String xmlResponse = internetHelper.requestUrlContent(createRequestUrl(isbn, params));
+		String xmlResponse = getBookInfos(isbn);
 
 		String tag = "Title";
 
@@ -104,10 +117,7 @@ public class AmazonAccess {
 	 * @return
 	 */
 	public double getRating(String isbn) {
-		Map<String, String> params = new TreeMap<String, String>();
-		params.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP_REVIEWS);
-
-		String xmlResponse = internetHelper.requestUrlContent(createRequestUrl(isbn, params));
+		String xmlResponse = getBookInfos(isbn);
 
 		String tag = "AverageRating";
 
@@ -126,10 +136,7 @@ public class AmazonAccess {
 	 * @return
 	 */
 	public String getPrice(String isbn) {
-		Map<String, String> params = new TreeMap<String, String>();
-		params.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP_PRICE);
-
-		String xmlResponse = internetHelper.requestUrlContent(createRequestUrl(isbn, params));
+		String xmlResponse = getBookInfos(isbn);
 
 		String tag = "FormattedPrice";
 
