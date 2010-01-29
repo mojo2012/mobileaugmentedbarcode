@@ -15,6 +15,7 @@ public class Logger {
 
 	static public void log(String message) {
 		String file = filePath + timestampHelper.timestamp("yyyy-MM-dd") + ".csv";
+		boolean isNewFile = false;
 
 		OutputStreamWriter out;
 
@@ -29,13 +30,17 @@ public class Logger {
 
 			if (!outputFile.exists()) {
 				outputFile.createNewFile();
+				isNewFile = true;
 			}
+
+			out = new OutputStreamWriter(new FileOutputStream(outputFile, true));
+
+			if (isNewFile)
+				out.append("log time; description; isbn; start time; end time;\n");
 
 			String time = timestampHelper.timestamp("hh:mm:ss");
 
-			out = new OutputStreamWriter(new FileOutputStream(outputFile));
-
-			out.append(time + ": " + message + "\n");
+			out.append(time + "; " + message + "\n");
 
 			out.flush();
 			out.close();

@@ -32,4 +32,10 @@
 		android:icon="@drawable/ic_lock_power_off"
 		android:title="Force quit application">
 	</item>
+	
+	<item
+		android:id="@+id/split_log_entry"
+		android:icon="@drawable/ic_alert"
+		android:title="Log separator line">
+	</item>
 </menu>

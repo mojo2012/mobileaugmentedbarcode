@@ -22,27 +22,32 @@ import android.util.Log;
 import android.view.View;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
+import at.ftw.mabs.internet.helpers.TimestampHelper;
+import at.ftw.mabs.logging.Logger;
 import at.ftw.mabs.ui.infolayers.IInfoLayer;
 
 import com.google.zxing.result.Result;
 import com.google.zxing.result.ResultPoint;
 
 public class AugmentedView extends View {
-	static final String	TAG				= "MABS/AugmentedView";
+	static final String	TAG							= "MABS/AugmentedView";
 
 	final Paint			paint;
 	final Rect			outerBox;
 	final Rect			innerBox;
-	boolean				showFocusRect	= false;
+	boolean				showFocusRect				= false;
 
 	MediaPlayer			mediaPlayer;
-	static final float	BEEP_VOLUME		= 0.10f;
+	static final float	BEEP_VOLUME					= 0.10f;
 	Timer				resetTimer;
 
 	IInfoLayer			infoLayer;
-	Bitmap				infoLayerBitmap	= null;
-	boolean				barcodeFound	= false;
+	Bitmap				infoLayerBitmap				= null;
+	boolean				barcodeFound				= false;
 	Point[]				resultPoints;
+
+	String				logStartInfoLayerDownload	= "";
+	String				barcode						= "";
 
 	// This constructor is used when the class is built from an XML resource.
 	public AugmentedView(Context context, AttributeSet attrs) {
@@ -88,6 +93,14 @@ public class AugmentedView extends View {
 
 					x = resultPoints[0].x;
 					y = resultPoints[0].y;
+				}
+
+				if (!logStartInfoLayerDownload.equals("")) {
+					String logEndInfoLayerDownload = TimestampHelper.getInstance().timestamp("hh:mm:ss");
+					Logger.log(barcode + "; download; " + logStartInfoLayerDownload + "; "
+							+ logEndInfoLayerDownload + "; ");
+
+					logStartInfoLayerDownload = "";
 				}
 
 				if (infoLayerBitmap != null) {
@@ -165,7 +178,10 @@ public class AugmentedView extends View {
 			resultPoints = getRectangularResultPoints(result.getResultPoints());
 		}
 
-		infoLayer.setISBN(result.getText());
+		logStartInfoLayerDownload = TimestampHelper.getInstance().timestamp("hh:mm:ss");
+
+		barcode = result.getText();
+		infoLayer.setISBN(barcode);
 
 		barcodeFound = true;
 
@@ -242,6 +258,7 @@ public class AugmentedView extends View {
 		public void run() {
 			barcodeFound = false;
 			infoLayerBitmap = null;
+			resultPoints = null;
 			resetTimer.cancel();
 			cancel();
 
