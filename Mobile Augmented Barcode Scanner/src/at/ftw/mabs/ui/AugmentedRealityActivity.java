@@ -275,6 +275,10 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 				saveSettings();
 
 				break;
+			case R.id.force_quit:
+				finish();
+
+				break;
 		}
 		return true;
 	}
