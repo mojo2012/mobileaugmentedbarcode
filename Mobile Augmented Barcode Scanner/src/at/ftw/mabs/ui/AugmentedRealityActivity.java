@@ -187,7 +187,7 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 				if (!logBarcodeDetectionStartTime.equals("")) {
 					String logBarcodeDetectionEndTime = TimestampHelper.getInstance().timestamp("hh:mm:ss");
-					Logger.log(rawResult.getText() + "; detection" + "; " + logBarcodeDetectionStartTime
+					Logger.log("detection; " + rawResult.getText() + "; " + logBarcodeDetectionStartTime
 							+ "; " + logBarcodeDetectionEndTime + "; ");
 
 					logBarcodeDetectionStartTime = "";
