@@ -26,6 +26,8 @@ import android.widget.Toast;
 import at.ftw.mabs.R;
 import at.ftw.mabs.camera.CameraManager;
 import at.ftw.mabs.internet.helpers.ConnectivityHelper;
+import at.ftw.mabs.internet.helpers.TimestampHelper;
+import at.ftw.mabs.logging.Logger;
 import at.ftw.mabs.scanner.ActivityHandler;
 import at.ftw.mabs.ui.infolayers.AmazonBookPriceLayer;
 import at.ftw.mabs.ui.infolayers.AmazonRatingLayer;
@@ -41,7 +43,7 @@ import com.google.zxing.result.Result;
  * @author meister.fuchs@gmail.com (Matthias Fuchs)
  */
 public final class AugmentedRealityActivity extends Activity implements SurfaceHolder.Callback {
-	static final String			TAG					= "MABS/AugmentedRealityActivity";
+	static final String			TAG								= "MABS/AugmentedRealityActivity";
 
 	ActivityHandler				handler;
 
@@ -50,17 +52,19 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 	TextView					statusTextView;
 
 	private MediaPlayer			mediaPlayer;
-	private static final float	BEEP_VOLUME			= 0.10f;
+	private static final float	BEEP_VOLUME						= 0.10f;
 
 	ConnectivityHelper			connectivityHelper;
 
-	SharedPreferences			settings			= null;
-	SharedPreferences.Editor	settingsEditor		= null;
+	SharedPreferences			settings						= null;
+	SharedPreferences.Editor	settingsEditor					= null;
 
 	boolean						showFocusRect;
-	String						infoLayerClassName	= "";
+	String						infoLayerClassName				= "";
 
-	String						lastBarcode			= "";
+	String						lastBarcode						= "";
+
+	String						logBarcodeDetectionStartTime	= "";
 
 	enum infoLayers {
 		ratingLayer,
@@ -181,6 +185,16 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 			if (rawResult != null) {
 				augmentedView.setBarcode(rawResult, true);
 
+				if (!logBarcodeDetectionStartTime.equals("")) {
+					Logger.log("Starting detection: " + logBarcodeDetectionStartTime);
+					Logger.log("Barcode found: " + rawResult.getText());
+
+					logBarcodeDetectionStartTime = "";
+				} else {
+					Logger.log("!!!!!!!!!NO START TIME SET!!!!!!!!!");
+					Logger.log("Barcode found: " + rawResult.getText());
+				}
+
 				handler.sendEmptyMessage(R.id.restart_preview);
 			}
 		} else {
@@ -285,7 +299,12 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
+
+		if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+			logBarcodeDetectionStartTime = TimestampHelper.getInstance().timestamp("hh:mm:ss");
+
+			return true;
+		} else if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
 			// Handle these events so they don't launch the Camera app
 			return true;
 		}
