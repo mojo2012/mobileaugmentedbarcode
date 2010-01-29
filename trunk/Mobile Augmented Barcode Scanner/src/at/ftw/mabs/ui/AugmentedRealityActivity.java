@@ -229,6 +229,8 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 
 		lastBarcode = "";
 
+		finish();
+
 		// saveSettings();
 	}
 
@@ -321,6 +323,14 @@ public final class AugmentedRealityActivity extends Activity implements SurfaceH
 		// Do nothing, this is to prevent the activity from being restarted when
 		// the keyboard opens.
 		super.onConfigurationChanged(config);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		// After this is called, your app process is no longer available in DDMS
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
