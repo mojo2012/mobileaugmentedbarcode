@@ -62,19 +62,23 @@ public class AmazonBookPriceLayer implements IInfoLayer {
 			lastPrice = amazonAccess.getPrice(isbn);
 			lastBookTitle = amazonAccess.getBookTitle(isbn);
 
-			lastBarcodeBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-
-			Canvas canvas = new Canvas(lastBarcodeBitmap);
-			Rect background = new Rect(0, 0, width, height);
-			canvas.drawRect(background, paint);
-
 			String textToDraw = "";
 
 			if (!lastPrice.equals("")) {
 				textToDraw = lastPrice;
 			} else {
-				textToDraw = "ISBN not found";
+				textToDraw = "n/a";
 			}
+
+			if (lastBookTitle.equals("")) {
+				lastBookTitle = "ISBN not found";
+			}
+
+			lastBarcodeBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+
+			Canvas canvas = new Canvas(lastBarcodeBitmap);
+			Rect background = new Rect(0, 0, width, height);
+			canvas.drawRect(background, paint);
 
 			canvas.drawText(lastBookTitle, (width / 2), 20, smallFontPaint);
 			canvas.drawText(textToDraw, (width / 2), (height / 2), fontPaint);
