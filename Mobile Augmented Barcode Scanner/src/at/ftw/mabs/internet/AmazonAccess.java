@@ -20,11 +20,14 @@ public class AmazonAccess {
 	static final String			REQUEST_METHOD			= "GET";
 	static final String			UTF8_CHARSET			= "UTF-8";
 
-	static final String			awsAccessKeyId			= "AKIAJFGRIDCBAGNA2KNQ";
-	static final String			awsSecretKey			= "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";
+	static final String			awsAccessKeyId			= "AKIAI3VKIESMAQIGA4RA";
+	static final String			awsSecretKey			= "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";
+	static final String			associateTag			= "boowie-20";
 
 	static final String			ACCESS_KEY_ID_KEY		= "AWSAccessKeyId";
 	static final String			ACCESS_KEY_ID			= awsAccessKeyId;
+	static final String			ASSOCIATE_TAG			= "AssociateTag";
+
 	static final String			ID_TYPE_KEY				= "IdType";
 	static final String			ID_TYPE					= "EAN";
 	static final String			ITEM_ID_KEY				= "ItemId";
@@ -84,6 +87,7 @@ public class AmazonAccess {
 
 			Map<String, String> params = new TreeMap<String, String>();
 			params.put(RESPONSE_GROUP_KEY, RESPONSE_GROUP_NAME + "," + RESPONSE_GROUP_REVIEWS);
+			params.put(ASSOCIATE_TAG, associateTag);
 
 			lastRequest = internetHelper.requestUrlContent(createRequestUrl(isbn, params));
 		}
@@ -182,9 +186,9 @@ public class AmazonAccess {
 
 		String toSign =
 				REQUEST_METHOD + "\n"
-				+ endpoint + "\n"
-				+ REQUEST_URI + "\n"
-				+ canonicalQS;
+						+ endpoint + "\n"
+						+ REQUEST_URI + "\n"
+						+ canonicalQS;
 
 		String hmac = encryptionHelper.hmac(secretyKeyBytes, toSign);
 		String sig = internetHelper.percentEncodeRfc3986(hmac);
